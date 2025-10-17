@@ -1,3 +1,10 @@
+# OncoBayes2 0.9-4 - October 17th, 2025
+
+## Enhancements
+
+* Releae of `OncoBayes2` to GitHub along with new `pkgdown`
+  [web-site](https://opensource.nibr.com/OncoBayes2/)
+
 # OncoBayes2 0.9-3 - April 25th, 2025
 
 ## Bug fixes

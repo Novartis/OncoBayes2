@@ -15,5 +15,5 @@ to the introductory
 
 
 <!-- badges: start -->
-	[![Codecov test coverage](https://codecov.io/gh/weberse2/OncoBayes2/graph/badge.svg)](https://app.codecov.io/gh/weberse2/OncoBayes2)
+	[![Codecov test coverage](https://codecov.io/gh/Novartis/OncoBayes2/graph/badge.svg)](https://app.codecov.io/gh/Novartis/OncoBayes2)
 <!-- badges: end -->

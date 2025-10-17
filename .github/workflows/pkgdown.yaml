@@ -30,11 +30,23 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          extra-repositories: 'https://mc-stan.org/r-packages/'
+          Ncpus: 4
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::., cmdstanr=?ignore
+          extra-packages: any::pkgdown, local::.
           needs: website
+          cache: true
+          cache-version: 2
+          upgrade: 'TRUE'
+
+# cmdstan is not used for building the web-site
+#      - name: Install CmdStan
+#        shell: Rscript {0}
+#        run: |
+#          cmdstanr::check_cmdstan_toolchain(fix = TRUE)
+#          cmdstanr::install_cmdstan(version = "2.36.0", cores=4)
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
