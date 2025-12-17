@@ -1,0 +1,146 @@
+# OncoBayes2
+
+Bayesian logistic regression model with optional
+EXchangeability-NonEXchangeability parameter modelling for flexible
+borrowing from historical or concurrent data-sources. The safety model
+can guide dose-escalation decisions for adaptive Oncology phase I
+dose-escalation trials which involve an arbitrary number of drugs.
+
+## Getting Started
+
+To get a quick overview over the package functionality, please refer to
+the introductory
+[vignette](https://opensource.nibr.com/OncoBayes2/articles/index.md).
+
+# Package index
+
+## Package overview
+
+Global options and references
+
+- [`OncoBayes2-package`](https://opensource.nibr.com/OncoBayes2/reference/OncoBayes2.md)
+  [`OncoBayes2`](https://opensource.nibr.com/OncoBayes2/reference/OncoBayes2.md)
+  : OncoBayes2
+
+## Model fitting
+
+- [`blrm_exnex()`](https://opensource.nibr.com/OncoBayes2/reference/blrm_exnex.md)
+  [`print(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/blrm_exnex.md)
+  : Bayesian Logistic Regression Model for N-compounds with EXNEX
+- [`blrm_trial()`](https://opensource.nibr.com/OncoBayes2/reference/blrm_trial.md)
+  [`print(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/blrm_trial.md)
+  : Dose-Escalation Trials guided by Bayesian Logistic Regression Model
+- [`update(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/update.blrm_trial.md)
+  : Update data and/or prior of a BLRM trial
+- [`update(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/update.blrmfit.md)
+  : Update data of a BLRM analysis
+
+## Model specification
+
+- [`blrm_formula_linear()`](https://opensource.nibr.com/OncoBayes2/reference/blrm_formula_linear.md)
+  : Build a BLRM formula with linear interaction term in logit-space
+- [`blrm_formula_saturating()`](https://opensource.nibr.com/OncoBayes2/reference/blrm_formula_saturating.md)
+  : Build a BLRM formula with saturating interaction term in logit-space
+
+## Model summary
+
+- [`summary(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/summary.blrm_trial.md)
+  : Summarise trial
+
+- [`summary(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/summary.blrmfit.md)
+  : Summarise model results
+
+- [`prior_summary(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/prior_summary.blrmfit.md)
+  : Summarise model prior
+
+- [`posterior_interval(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/posterior_interval.blrmfit.md)
+  : Posterior intervals
+
+- [`posterior_linpred(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/posterior_linpred.blrmfit.md)
+  : Posterior of linear predictor
+
+- [`posterior_predict(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/posterior_predict.blrmfit.md)
+  : Posterior of predictive
+
+- [`predictive_interval(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/predictive_interval.blrmfit.md)
+  : Posterior predictive intervals
+
+- [`plot_toxicity_curve()`](https://opensource.nibr.com/OncoBayes2/reference/plot_blrm.md)
+  [`plot_toxicity_intervals()`](https://opensource.nibr.com/OncoBayes2/reference/plot_blrm.md)
+  [`plot_toxicity_intervals_stacked()`](https://opensource.nibr.com/OncoBayes2/reference/plot_blrm.md)
+  : Plot a fitted model
+
+- [`critical_quantile()`](https://opensource.nibr.com/OncoBayes2/reference/critical_quantile.md)
+  : Critical quantile
+
+- [`log_posterior(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/diagnostic-quantities.md)
+  [`nuts_params(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/diagnostic-quantities.md)
+  [`rhat(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/diagnostic-quantities.md)
+  [`neff_ratio(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/diagnostic-quantities.md)
+  :
+
+  Extract Diagnostic Quantities of OncoBayes2 Models
+
+- [`as_draws(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_matrix(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_array(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_df(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_list(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_rvars(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_matrix(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_array(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_df(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_list(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  [`as_draws_rvars(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
+  **\[experimental\]** :
+
+  Transform `blrmfit` or `blrm_trial` to `draws` objects
+
+## Examples
+
+- [`example-combo2`](https://opensource.nibr.com/OncoBayes2/reference/example-combo2.md)
+  : Two-drug combination example
+- [`example-combo2_trial`](https://opensource.nibr.com/OncoBayes2/reference/example-combo2_trial.md)
+  : Two-drug combination example using BLRM Trial
+- [`example-combo3`](https://opensource.nibr.com/OncoBayes2/reference/example-combo3.md)
+  : Three-drug combination example
+- [`example-single-agent`](https://opensource.nibr.com/OncoBayes2/reference/example-single-agent.md)
+  : Single Agent Example
+- [`example_model()`](https://opensource.nibr.com/OncoBayes2/reference/example_model.md)
+  : Runs example models
+
+## Datasets
+
+- [`hist_SA`](https://opensource.nibr.com/OncoBayes2/reference/hist_SA.md)
+  : Single-agent example
+- [`hist_combo2`](https://opensource.nibr.com/OncoBayes2/reference/hist_combo2.md)
+  : Dataset: historical data on two single-agents to inform a
+  combination study
+- [`codata_combo2`](https://opensource.nibr.com/OncoBayes2/reference/codata_combo2.md)
+  : Dataset: historical and concurrent data on a two-way combination
+- [`hist_combo3`](https://opensource.nibr.com/OncoBayes2/reference/hist_combo3.md)
+  : Dataset: historical and concurrent data on a three-way combination
+- [`drug_info_combo2`](https://opensource.nibr.com/OncoBayes2/reference/drug_info_combo2.md)
+  : Dataset: drug information for a dual-agent combination study
+- [`dose_info_combo2`](https://opensource.nibr.com/OncoBayes2/reference/dose_info_combo2.md)
+  : Dataset: trial dose information for a dual-agent combination study
+
+## Misc
+
+- [`bind_rows_0()`](https://opensource.nibr.com/OncoBayes2/reference/bind_rows_0.md)
+  : Bind rows of multiple data frames with zero fill
+- [`nsamples(`*`<blrmfit>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/nsamples.blrmfit.md)
+  : Return the number of posterior samples
+- [`logit()`](https://opensource.nibr.com/OncoBayes2/reference/lodds.md)
+  [`inv_logit()`](https://opensource.nibr.com/OncoBayes2/reference/lodds.md)
+  : Logit (log-odds) and inverse-logit function.
+
+# Articles
+
+### All vignettes
+
+- [Guiding Oncology Dose-Escalation
+  Trials](https://opensource.nibr.com/OncoBayes2/articles/introduction.md):
+- [Meta-Analytic-Predictive (MAP) approach for dose-toxicity
+  modelling](https://opensource.nibr.com/OncoBayes2/articles/map_approach.md):

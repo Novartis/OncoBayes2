@@ -128,7 +128,7 @@ single drug model, then a mixture prior is accepted as well.</p></dd>
 
 
 <dt id="arg-prior-ex-mu-mean-comp-prior-ex-mu-sd-comp">prior_EX_mu_mean_comp, prior_EX_mu_sd_comp<a class="anchor" aria-label="anchor" href="#arg-prior-ex-mu-mean-comp-prior-ex-mu-sd-comp"></a></dt>
-<dd><p><!-------------></p>
+<dd><p><!-- nobreak --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>prior_EX_mu_comp</code>
 instead. Mean and sd for the prior on the mean parameters
@@ -147,7 +147,7 @@ normal mixture prior instead of a list with just one element.</p></dd>
 
 
 <dt id="arg-prior-ex-tau-mean-comp-prior-ex-tau-sd-comp">prior_EX_tau_mean_comp, prior_EX_tau_sd_comp<a class="anchor" aria-label="anchor" href="#arg-prior-ex-tau-mean-comp-prior-ex-tau-sd-comp"></a></dt>
-<dd><p><!-----------></p>
+<dd><p><!-- nobreak --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>prior_EX_tau_comp</code>
 instead. Prior mean and sd for heterogeniety parameter
@@ -176,7 +176,7 @@ number of interactions.</p></dd>
 
 
 <dt id="arg-prior-ex-mu-mean-inter-prior-ex-mu-sd-inter">prior_EX_mu_mean_inter, prior_EX_mu_sd_inter<a class="anchor" aria-label="anchor" href="#arg-prior-ex-mu-mean-inter-prior-ex-mu-sd-inter"></a></dt>
-<dd><p><!------------></p>
+<dd><p><!-- nobreak --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>prior_EX_mu_inter</code>
 instead. Prior mean and sd for population mean parameters
@@ -194,7 +194,7 @@ instead of a list with just one element.</p></dd>
 
 
 <dt id="arg-prior-ex-tau-mean-inter-prior-ex-tau-sd-inter">prior_EX_tau_mean_inter, prior_EX_tau_sd_inter<a class="anchor" aria-label="anchor" href="#arg-prior-ex-tau-mean-inter-prior-ex-tau-sd-inter"></a></dt>
-<dd><p><!----------></p>
+<dd><p><!-- nobre --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
 <code>prior_EX_tau_inter</code> instead. Prior mean and sd for heterogeniety
@@ -211,15 +211,15 @@ corresponding to a marginal uniform prior of the correlations.</p></dd>
 <dt id="arg-prior-is-exnex-inter">prior_is_EXNEX_inter<a class="anchor" aria-label="anchor" href="#arg-prior-is-exnex-inter"></a></dt>
 <dd><p>Defines if non-exchangability is
 admitted for a given interaction parameter. Logical vector of
-length equal to the number of interactions. If missing
-<code>FALSE</code> is assumed for all interactions.</p></dd>
+length equal to the number of interactions. If missing <code>FALSE</code> is
+assumed for all interactions.</p></dd>
 
 
 <dt id="arg-prior-is-exnex-comp">prior_is_EXNEX_comp<a class="anchor" aria-label="anchor" href="#arg-prior-is-exnex-comp"></a></dt>
 <dd><p>Defines if non-exchangability is
 admitted for a given component. Logical vector of length equal to
-the number of components. If missing <code>TRUE</code> is assumed for
-all components.</p></dd>
+the number of components. If missing <code>TRUE</code> is assumed for all
+components.</p></dd>
 
 
 <dt id="arg-prior-ex-prob-comp">prior_EX_prob_comp<a class="anchor" aria-label="anchor" href="#arg-prior-ex-prob-comp"></a></dt>
@@ -246,7 +246,7 @@ same across groups j.</p></dd>
 
 
 <dt id="arg-prior-nex-mu-mean-comp-prior-nex-mu-sd-comp">prior_NEX_mu_mean_comp, prior_NEX_mu_sd_comp<a class="anchor" aria-label="anchor" href="#arg-prior-nex-mu-mean-comp-prior-nex-mu-sd-comp"></a></dt>
-<dd><p><!-----------></p>
+<dd><p><!-- nobreak --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>prior_NEX_mu_comp</code>
 instead. Prior mean \(\boldsymbol m_{ij}\) and sd
@@ -266,7 +266,7 @@ the same prior as given for the EX part.</p></dd>
 
 
 <dt id="arg-prior-nex-mu-mean-inter-prior-nex-mu-sd-inter">prior_NEX_mu_mean_inter, prior_NEX_mu_sd_inter<a class="anchor" aria-label="anchor" href="#arg-prior-nex-mu-mean-inter-prior-nex-mu-sd-inter"></a></dt>
-<dd><p><!---------></p>
+<dd><p><!-- nobrea --></p>
 
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
 <code>prior_NEX_mu_inter</code> instead. Prior mean \(m_{\eta k j}\) and
@@ -284,11 +284,10 @@ hierarchical structure of the model.</p></dd>
 
 
 <dt id="arg-sample-map">sample_map<a class="anchor" aria-label="anchor" href="#arg-sample-map"></a></dt>
-<dd><p>Logical flag (defaults to <code>FALSE</code>)
-controlling inclusion of MAP priors for each stratum defined as
-part of the generated posterior. If set to <code>TRUE</code> then the
-posterior samples will contain <code>map_log_beta</code> and
-<code>map_eta</code> variables.</p></dd>
+<dd><p>Logical flag (defaults to <code>FALSE</code>) controlling
+inclusion of MAP priors for each stratum defined as part of the
+generated posterior. If set to <code>TRUE</code> then the posterior samples
+will contain <code>map_log_beta</code> and <code>map_eta</code> variables.</p></dd>
 
 
 <dt id="arg-iter">iter<a class="anchor" aria-label="anchor" href="#arg-iter"></a></dt>
@@ -334,14 +333,14 @@ unconstrained space for random initialization. See
 
 
 <dt id="arg-prior-pd">prior_PD<a class="anchor" aria-label="anchor" href="#arg-prior-pd"></a></dt>
-<dd><p>Logical flag (defaults to <code>FALSE</code>) indicating
-if to sample the prior predictive distribution instead of
-conditioning on the data.</p></dd>
+<dd><p>Logical flag (defaults to <code>FALSE</code>) indicating if to
+sample the prior predictive distribution instead of conditioning
+on the data.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Logical flag (defaults to <code>FALSE</code>) controlling
-if additional output like stan progress is reported.</p></dd>
+<dd><p>Logical flag (defaults to <code>FALSE</code>) controlling if
+additional output like stan progress is reported.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -1122,7 +1121,7 @@ in drug combination studies</em> (Vol. 69). CRC Press.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
