@@ -2,6 +2,8 @@
 
 ## OncoBayes2 0.9-4 - December 17th, 2025
 
+CRAN release: 2025-12-18
+
 ### Enhancements
 
 - Add public pkgdown web-site and establish new GitHub homepage of

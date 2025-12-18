@@ -16,7 +16,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/Novartis/OncoBayes2/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/Novartis/OncoBayes2/blob/0.9-4/DESCRIPTION)
 
 Weber S, Widmer L, Bean A (2025). *OncoBayes2: Bayesian Logistic
 Regression for Oncology Dose-Escalation Trials*. R package version
