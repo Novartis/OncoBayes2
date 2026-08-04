@@ -24,19 +24,15 @@ parameters (\\\tau^2\_\alpha\\ and \\\tau^2\_\beta\\) to zero.
 
 ## References
 
-Neuenschwander, B., Branson, M., & Gsponer, T. (2008). Critical aspects
-of the Bayesian approach to phase I cancer trials. *Statistics in
-medicine*, 27(13), 2420-2439.
+Neuenschwander B, Branson M, Gsponer T (2008). “Critical aspects of the
+Bayesian approach to phase I cancer trials.” *Statistics in Medicine*,
+**27**(13), 2420–2439.
+[doi:10.1002/sim.3230](https://doi.org/10.1002/sim.3230) .
 
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 ## Example from Neuenschwander, B., et al. (2009). Stats in Medicine
 
@@ -56,15 +52,6 @@ blrmfit <- blrm_exnex(
   prior_tau_dist = NULL,
   prior_PD = FALSE
 )
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
 ## Recover user set sampling defaults
 options(.user_mc_options)
 ```

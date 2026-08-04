@@ -39,14 +39,16 @@ The function returns an object of class `blrm_formula`.
 
 ## References
 
-Widmer, L.A., Bean, A., Ohlssen, D., Weber, S., Principled Drug-Drug
+Widmer LA, Bean A, Ohlssen D, Weber S (2023). “Principled Drug-Drug
 Interaction Terms for Bayesian Logistic Regression Models of Drug Safety
-in Oncology Phase I Combination Trials *arXiv pre-print*, 2023,
+in Oncology Phase I Combination Trials.” *arXiv pre-print*.
 [doi:10.48550/arXiv.2302.11437](https://doi.org/10.48550/arXiv.2302.11437)
+.
 
 ## Examples
 
 ``` r
+
 ref_doses <- c(drug_A = 10, drug_B = 20)
 
 # can be used with blrm_trial

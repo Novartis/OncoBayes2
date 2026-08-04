@@ -1,5 +1,31 @@
 # Changelog
 
+## OncoBayes2 0.10-0 - August 4th, 2026
+
+### Enhancements
+
+- Refactor `blrmfit` posterior samples to be stored as `posterior` draws
+  with sampler diagnostics stored separately. The internal `stanfit`
+  sample store is removed, with a `stanfit = NULL` slot retained for
+  compatibility with partial matching behavior. The `lp__` draw remains
+  available for
+  [`log_posterior()`](https://opensource.nibr.com/OncoBayes2/reference/diagnostic-quantities.md).
+- Remove `cmdstanr` auxiliary files after posterior draws, diagnostics,
+  and metadata are imported into `blrmfit`.
+- Printed posterior summaries and diagnostics may differ slightly
+  because summaries are computed with the `posterior` package.
+- Centralize all bibliographic references in a single BibTeX file
+  `inst/REFERENCES.bib`. The Rd help pages now cite it via `Rdpack`
+  (`\insertRef`), and the vignettes use a `Makefile`-generated copy
+  (`vignettes/references.bib`) so references are defined in one place
+  only.
+
+### Bug fixes
+
+- Bump the minimum required `RBesT` version to 1.8-2 and remove the
+  [`mixmvnorm()`](https://opensource.nibr.com/RBesT/reference/mixmvnorm.html)
+  zero standard-deviation workaround now handled by `RBesT`.
+
 ## OncoBayes2 0.9-4 - December 17th, 2025
 
 CRAN release: 2025-12-18

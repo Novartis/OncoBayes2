@@ -44,6 +44,8 @@ A tibble with 11 rows and 5 variables:
 
 ## References
 
-Neuenschwander, B., Roychoudhury, S., & Schmidli, H. (2016). On the use
-of co-data in clinical trials. *Statistics in Biopharmaceutical
-Research*, 8(3), 345-354.
+Neuenschwander B, Roychoudhury S, Schmidli H (2016). “On the use of
+co-data in clinical trials.” *Statistics in Biopharmaceutical Research*,
+**8**(3), 345–354.
+[doi:10.1080/19466315.2016.1174149](https://doi.org/10.1080/19466315.2016.1174149)
+.

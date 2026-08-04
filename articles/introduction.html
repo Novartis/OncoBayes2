@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Guiding Oncology Dose-Escalation Trials • OncoBayes2</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Guiding Oncology Dose-Escalation Trials">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">OncoBayes2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9-4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,9 +63,9 @@
                         <h4 data-toc-skip class="author">Andrew Bean,
 Sebastian Weber, Lukas Widmer</h4>
             
-            <h4 data-toc-skip class="date">2025-12-18</h4>
+            <h4 data-toc-skip class="date">2026-08-04</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Novartis/OncoBayes2/blob/0.9-4/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Novartis/OncoBayes2/blob/main/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
     </div>
 
@@ -93,14 +93,14 @@ compound(s) involved. The additional data can be either historical data
 collected prior trial conduct or concurrent data, which is collected
 during trial conduct in the context of another trial/context.</p>
 <p>The package supports incorporation of additional data through a
-Meta-Analytic-Combined (MAC) framework [1]. Within the MAC model the
-heterogeneous sources of data are assigned to <em>groups</em> and
-information is shared across groups through a hierarchical model
-structure. For any given group this leads to borrowing strength from all
-other groups while discounting the information from other groups. The
-amount of discounting (or down-weighting) is determined by the
-heterogeneity. A group is commonly defined to be a trial, but that must
-not necessarily hold.</p>
+Meta-Analytic-Combined (MAC) framework <span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>)</span>. Within the MAC model the heterogeneous sources of
+data are assigned to <em>groups</em> and information is shared across
+groups through a hierarchical model structure. For any given group this
+leads to borrowing strength from all other groups while discounting the
+information from other groups. The amount of discounting (or
+down-weighting) is determined by the heterogeneity. A group is commonly
+defined to be a trial, but that must not necessarily hold.</p>
 <p>The key assumption of the hierarchical model is the exchangability
 assumption between the groups. There are two independent mechanisms in
 the package which aim at relaxing the exchangability assumption:</p>
@@ -124,7 +124,10 @@ each drug individually from separate trials. This example will be
 expanded by using in addition concurrent data on one of the drugs and on
 their combination.</p>
 <p><strong>Note on terminology:</strong> While in the literature (see
-[1], [2], and [4]) the term <em>stratum</em> refers to a trial commonly,
+<span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>; <a href="#ref-neuenschwander2016exnex">Neuenschwander,
+Wandel, et al. 2016</a>; <a href="#ref-neuenschwander2014">Neuenschwander et al. 2014</a>)</span>)
+the term <em>stratum</em> refers to a trial commonly,
 <code>OncoBayes2</code> deviates here and uses the term <em>group</em>
 instead. This is more in line with hierarchical modeling terminology.
 The term <em>stratum</em> is used to define a higher level grouping
@@ -145,12 +148,13 @@ convention <code>OncoBayes2</code> assigns any group to the stratum
 <h2 id="example-use-case-dual-combination-trial-with-historical-information">Example use-case: Dual combination trial with historical
 information<a class="anchor" aria-label="anchor" href="#example-use-case-dual-combination-trial-with-historical-information"></a>
 </h2>
-<p>Consider the application described in Section 3.2 of [1], in which
-the risk of DLT is to be studied as a function of dose for two drugs,
-drug A and drug B. Historical information on the toxicity profiles of
-these two drugs is available from single agent trials
-<code>trial_A</code> and <code>trial_B</code>. The historical data for
-this example is available in an internal data set.</p>
+<p>Consider the application described in Section 3.2 of <span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>)</span>, in which the risk of DLT is to be studied as a
+function of dose for two drugs, drug A and drug B. Historical
+information on the toxicity profiles of these two drugs is available
+from single agent trials <code>trial_A</code> and <code>trial_B</code>.
+The historical data for this example is available in an internal data
+set.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">kable</span><span class="op">(</span><span class="va">hist_combo2</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -288,13 +292,14 @@ trial</li>
 </ul>
 <p>Information about the study drugs is encoded through a
 <code>tibble</code> as below. This includes the names of the
-study-drugs, the reference doses (see [3] or <code><a href="../reference/blrm_exnex.html">?blrm_exnex</a></code> to
-understand the role this choice plays in the model specification), the
-dosing units, and (optionally) the a priori expected DLT rate for each
-study drug given individually at the respective reference doses.</p>
-<p>All design information for the study described in [1] is also
-included as built-in datasets, which are part of the
-<code>OncoBayes2</code> package.</p>
+study-drugs, the reference doses (see <span class="citation">(<a href="#ref-neuenschwander2008">Neuenschwander et al. 2008</a>)</span> or
+<code><a href="../reference/blrm_exnex.html">?blrm_exnex</a></code> to understand the role this choice plays in the
+model specification), the dosing units, and (optionally) the a priori
+expected DLT rate for each study drug given individually at the
+respective reference doses.</p>
+<p>All design information for the study described in <span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>)</span> is also included as built-in datasets, which are
+part of the <code>OncoBayes2</code> package.</p>
 <div class="section level4">
 <h4 id="drug-info">Drug info<a class="anchor" aria-label="anchor" href="#drug-info"></a>
 </h4>
@@ -416,9 +421,11 @@ is not recommended for actual trials as the prior should be chosen
 deliberately and there is no guarantee that the simplified prior will
 remain stable across releases of the package. See
 <code><a href="../reference/example-combo2_trial.html">?'example-combo2_trial'</a></code> for an example of #2. The below
-choice of prior broadly follows the case study in [4], although we
-slightly deviate from the model in [4] by a different reference dose and
-mean reference DLT rate.</p>
+choice of prior broadly follows the case study in <span class="citation">(<a href="#ref-neuenschwander2014">Neuenschwander et
+al. 2014</a>)</span>, although we slightly deviate from the model in
+<span class="citation">(<a href="#ref-neuenschwander2014">Neuenschwander
+et al. 2014</a>)</span> by a different reference dose and mean reference
+DLT rate.</p>
 <p>To employ the simplified prior, and fit the model with MCMC:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combo2_trial_start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/blrm_trial.html">blrm_trial</a></span><span class="op">(</span></span>
@@ -599,13 +606,13 @@ provisional doses specified previously, we simply write:</p>
 </table>
 <p>Such summaries may be used to assess which combination doses have
 unacceptable high risk of toxicity. For example, according to the
-escalation with overdose control (EWOC) design criteria [3], one would
-compute the posterior probability that each dose is excessively toxic
-(column <code>prob_overdose</code>; note that the definition of
-“excessively toxic” is encoded in the <code>blrm_trial</code> object
-through the <code>interval_prob</code> argument), and take as eligible
-doses only those where this probability does not exceed 25% (column
-<code>ewoc_ok</code>).</p>
+escalation with overdose control (EWOC) design criteria <span class="citation">(<a href="#ref-neuenschwander2008">Neuenschwander et
+al. 2008</a>)</span>, one would compute the posterior probability that
+each dose is excessively toxic (column <code>prob_overdose</code>; note
+that the definition of “excessively toxic” is encoded in the
+<code>blrm_trial</code> object through the <code>interval_prob</code>
+argument), and take as eligible doses only those where this probability
+does not exceed 25% (column <code>ewoc_ok</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="posterior-accuracy-of-ewoc-estimation">Posterior accuracy of EWOC estimation<a class="anchor" aria-label="anchor" href="#posterior-accuracy-of-ewoc-estimation"></a>
@@ -618,8 +625,8 @@ required to ensure that the MCMC chains have converged and that the
 number of samples representing the posterior is large enough to estimate
 desired quantities of interest with sufficient accuracy. The
 <code>OncoBayes2</code> package automatically warns in case of
-non-convergence as indicated by the Rhat diagnostic [5]. All model
-parameters must have an Rhat of less than
+non-convergence as indicated by the Rhat diagnostic <span class="citation">(<a href="#ref-vehtari2021">Vehtari et al.
+2021</a>)</span>. All model parameters must have an Rhat of less than
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1.1</mn><annotation encoding="application/x-tex">1.1</annotation></semantics></math>
 (values much larger than
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1.0</mn><annotation encoding="application/x-tex">1.0</annotation></semantics></math>
@@ -746,7 +753,7 @@ variate, the statistic can be compared with quantiles of the standard
 normal distribution. <code>OncoBayes2</code> will warn for an imprecise
 EWOC estimate whenever the statistic is within the range of the central
 95% interval of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><mn>1.96</mn><mo>,</mo><mn>1.96</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(-1.96,1.96)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mn>1.96</mn><mo>,</mo><mn>1.96</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(-1.96,1.96)</annotation></semantics></math>.
 Whenever this occurs it can be useful to increase the number of
 iterations in order to decrease the mcse, which scales with the inverse
 of the square root of the MC ess. The MC ess is the number of
@@ -759,7 +766,7 @@ decision can be determined with more than enough accuracy given that the
 statistic closest to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
 is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1.17</mn></mrow><annotation encoding="application/x-tex">-1.17</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1.17</mn></mrow><annotation encoding="application/x-tex">-1.17</annotation></semantics></math>.</p>
 </div>
 <div class="section level3">
 <h3 id="posterior-predictive-summaries">Posterior predictive summaries<a class="anchor" aria-label="anchor" href="#posterior-predictive-summaries"></a>
@@ -1334,9 +1341,9 @@ scenarios for a cohort of size 3</caption>
 <div class="section level2">
 <h2 id="continuation-of-example-using-concurrent-data">Continuation of example: Using concurrent data<a class="anchor" aria-label="anchor" href="#continuation-of-example-using-concurrent-data"></a>
 </h2>
-<p>In the example of [1], at the time of completion of the first stage
-of <code>trial_AB</code>, the following additional data was
-observed.</p>
+<p>In the example of <span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>)</span>, at the time of completion of the first stage of
+<code>trial_AB</code>, the following additional data was observed.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trial_AB_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">codata_combo2</span>, <span class="va">group_id</span> <span class="op">==</span> <span class="st">"trial_AB"</span>, <span class="va">cohort_time</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu">kable</span><span class="op">(</span><span class="va">trial_AB_data</span><span class="op">)</span></span></code></pre></div>
@@ -1449,7 +1456,7 @@ dose.</p>
 <span>  group <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">drug_A</span><span class="op">)</span>,</span>
 <span>  facet_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Trial AB with historical data only"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_blrm.html">plot_toxicity_intervals_stacked</a></span><span class="op">(</span><span class="va">combo2_trial_codata</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">dose_info</span>, dose_id <span class="op">=</span> <span class="cn">NULL</span>, stratum_id <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span>,</span>
@@ -1457,12 +1464,13 @@ dose.</p>
 <span>  group <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">drug_A</span><span class="op">)</span>,</span>
 <span>  facet_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Trial AB with historical and concurrent data on drug A"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-25-2.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-25-2.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>As we can observe, the additional data on drug A moves the maximal
 admissible dose allowed by EWOC towards higher doses for drug B whenever
 drug A is 6 mg. This reflects that drug A has been observed to be
 relatively safe, since no DLT was observed for a number of doses.</p>
-<p>In the example of [1], during the conduct of the second stage of the
+<p>In the example of <span class="citation">(<a href="#ref-neuenschwander2016codata">Neuenschwander, Roychoudhury, et
+al. 2016</a>)</span>, during the conduct of the second stage of the
 <code>trial_AB</code> an additional external data source from a new
 trial became available. This time it is stemming from another trial
 which is an investigator-initiated trial <code>IIT</code> of the same
@@ -1600,7 +1608,7 @@ then the EWOC criterion is violated and the dose is too toxic.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_contour.html" class="external-link">geom_contour_filled</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.16</span>, <span class="fl">0.33</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span><span class="st">"Quantile Range"</span>, type <span class="op">=</span> <span class="st">"div"</span>, palette <span class="op">=</span> <span class="st">"RdBu"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"DLT Probability 75% Quantile"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <!---
 ## Advanced topics
 
@@ -1610,7 +1618,8 @@ A brief note on terminology: the `group_id` variable, present in the `data`
 and `dose_info` arguments of a `blrm_trial` object, divides observations and
 dose levels into homogeneous groups sharing the same set of parameters
 in the hierarchical model. These `group_id`'s are referred to as "strata"
-in [1], [2], and [4]. No confusion should arise between this terminology
+in [@neuenschwander2016codata], [@neuenschwander2016exnex], and
+[@neuenschwander2014]. No confusion should arise between this terminology
 and the `stratum_id` variable, an optional set of higher-level stratifying
 factors which can serve to divide the `group_id`'s into classes which 
 share the same heterogeneity parameters. For more information on models
@@ -1622,34 +1631,49 @@ section of `?blrm_exnex` on differential discounting, and to
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>[1] Neuenschwander, B., Roychoudhury, S., &amp; Schmidli, H. (2016).
-On the use of co-data in clinical trials. Statistics in
-Biopharmaceutical Research, 8(3), 345-354.</p>
-<p>[2] Neuenschwander, B., Wandel, S., Roychoudhury, S., &amp; Bailey,
-S. (2016). Robust exchangeability designs for early phase clinical
-trials with multiple strata. Pharmaceutical statistics, 15(2),
-123-134.</p>
-<p>[3] Neuenschwander, B., Branson, M., &amp; Gsponer, T. (2008).
-Critical aspects of the Bayesian approach to phase I cancer trials.
-Statistics in medicine, 27(13), 2420-2439.</p>
-<p>[4] Neuenschwander, B., Matano, A., Tang, Z., Roychoudhury, S.,
-Wandel, S. Bailey, Stuart. (2014). A Bayesian Industry Approach to Phase
-I Combination Trials in Oncology. In Statistical methods in drug
-combination studies (Vol. 69). CRC Press.</p>
-<p>[5] Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., Bürkner, P.
-C. (2021). Rank-Normalization, Folding, and Localization: An Improved
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>R</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{R}</annotation></semantics></math>)
-for Assessing Convergence of MCMC, Bayesian Analysis, 16 (2), 667–718.
-<a href="https://doi.org/10.1214/20-BA1221" class="external-link uri">https://doi.org/10.1214/20-BA1221</a></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-neuenschwander2008" class="csl-entry">
+Neuenschwander, Beat, Michael Branson, and Thomas Gsponer. 2008.
+<span>“Critical Aspects of the <span>Bayesian</span> Approach to Phase
+<span>I</span> Cancer Trials.”</span> <em>Statistics in Medicine</em> 27
+(13): 2420–39. <a href="https://doi.org/10.1002/sim.3230" class="external-link">https://doi.org/10.1002/sim.3230</a>.
+</div>
+<div id="ref-neuenschwander2014" class="csl-entry">
+Neuenschwander, Beat, Alessandro Matano, Zhaoling Tang, Satrajit
+Roychoudhury, Simon Wandel, and Stuart Bailey. 2014. <span>“A
+<span>Bayesian</span> Industry Approach to Phase <span>I</span>
+Combination Trials in Oncology.”</span> In <em>Statistical Methods in
+Drug Combination Studies</em>, vol. 69. CRC Press. <a href="https://doi.org/10.1201/b17965-9" class="external-link">https://doi.org/10.1201/b17965-9</a>.
+</div>
+<div id="ref-neuenschwander2016codata" class="csl-entry">
+Neuenschwander, Beat, Satrajit Roychoudhury, and Heinz Schmidli. 2016.
+<span>“On the Use of Co-Data in Clinical Trials.”</span> <em>Statistics
+in Biopharmaceutical Research</em> 8 (3): 345–54. <a href="https://doi.org/10.1080/19466315.2016.1174149" class="external-link">https://doi.org/10.1080/19466315.2016.1174149</a>.
+</div>
+<div id="ref-neuenschwander2016exnex" class="csl-entry">
+Neuenschwander, Beat, Simon Wandel, Satrajit Roychoudhury, and Stuart
+Bailey. 2016. <span>“Robust Exchangeability Designs for Early Phase
+Clinical Trials with Multiple Strata.”</span> <em>Pharmaceutical
+Statistics</em> 15 (2): 123–34. <a href="https://doi.org/10.1002/pst.1730" class="external-link">https://doi.org/10.1002/pst.1730</a>.
+</div>
+<div id="ref-vehtari2021" class="csl-entry">
+Vehtari, Aki, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+Paul-Christian Bürkner. 2021. <span>“Rank-Normalization, Folding, and
+Localization: An Improved
+<span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>R</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\widehat{R}</annotation></semantics></math></span>
+for Assessing Convergence of <span>MCMC</span>.”</span> <em>Bayesian
+Analysis</em> 16 (2): 667–718. <a href="https://doi.org/10.1214/20-BA1221" class="external-link">https://doi.org/10.1214/20-BA1221</a>.
+</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.5.2 (2025-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 24.04.3 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -1668,32 +1692,34 @@ for Assessing Convergence of MCMC, Bayesian Analysis, 16 (2), 667–718.
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] tibble_3.3.0     ggplot2_4.0.1    knitr_1.50       tidyr_1.3.1     </span></span>
-<span><span class="co">## [5] dplyr_1.1.4      posterior_1.6.1  OncoBayes2_0.9-4 RBesT_1.8-2     </span></span>
+<span><span class="co">## [1] tibble_3.3.1      ggplot2_4.0.3     knitr_1.51        tidyr_1.3.2      </span></span>
+<span><span class="co">## [5] dplyr_1.2.1       posterior_1.7.0   OncoBayes2_0.10-0 RBesT_1.10-0     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] tensorA_0.36.2.1      sass_0.4.10           generics_0.1.4       </span></span>
-<span><span class="co">##  [4] digest_0.6.39         magrittr_2.0.4        evaluate_1.0.5       </span></span>
-<span><span class="co">##  [7] grid_4.5.2            RColorBrewer_1.1-3    mvtnorm_1.3-3        </span></span>
-<span><span class="co">## [10] fastmap_1.2.0         jsonlite_2.0.0        pkgbuild_1.4.8       </span></span>
-<span><span class="co">## [13] backports_1.5.0       Formula_1.2-5         gridExtra_2.3        </span></span>
-<span><span class="co">## [16] purrr_1.2.0           QuickJSR_1.8.1        scales_1.4.0         </span></span>
-<span><span class="co">## [19] isoband_0.3.0         codetools_0.2-20      textshaping_1.0.4    </span></span>
-<span><span class="co">## [22] jquerylib_0.1.4       abind_1.4-8           cli_3.6.5            </span></span>
-<span><span class="co">## [25] rlang_1.1.6           withr_3.0.2           cachem_1.1.0         </span></span>
-<span><span class="co">## [28] yaml_2.3.12           StanHeaders_2.32.10   parallel_4.5.2       </span></span>
-<span><span class="co">## [31] tools_4.5.2           rstan_2.32.7          inline_0.3.21        </span></span>
-<span><span class="co">## [34] rstantools_2.5.0      checkmate_2.3.3       assertthat_0.2.1     </span></span>
-<span><span class="co">## [37] vctrs_0.6.5           R6_2.6.1              matrixStats_1.5.0    </span></span>
-<span><span class="co">## [40] stats4_4.5.2          lifecycle_1.0.4       fs_1.6.6             </span></span>
-<span><span class="co">## [43] ragg_1.5.0            pkgconfig_2.0.3       desc_1.4.3           </span></span>
-<span><span class="co">## [46] pkgdown_2.2.0         RcppParallel_5.1.11-1 pillar_1.11.1        </span></span>
-<span><span class="co">## [49] bslib_0.9.0           gtable_0.3.6          loo_2.8.0            </span></span>
-<span><span class="co">## [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    </span></span>
-<span><span class="co">## [55] xfun_0.55             tidyselect_1.2.1      bayesplot_1.15.0     </span></span>
-<span><span class="co">## [58] farver_2.1.2          htmltools_0.5.9       labeling_0.4.3       </span></span>
-<span><span class="co">## [61] rmarkdown_2.30        compiler_4.5.2        S7_0.2.1             </span></span>
-<span><span class="co">## [64] distributional_0.5.0</span></span></code></pre>
+<span><span class="co">##  [1] gtable_0.3.6         tensorA_0.36.2.1     xfun_0.60           </span></span>
+<span><span class="co">##  [4] bslib_0.12.0         QuickJSR_1.10.0      inline_0.3.21       </span></span>
+<span><span class="co">##  [7] vctrs_0.7.3          tools_4.6.1          Rdpack_2.6.6        </span></span>
+<span><span class="co">## [10] generics_0.1.4       stats4_4.6.1         parallel_4.6.1      </span></span>
+<span><span class="co">## [13] pkgconfig_2.0.3      checkmate_2.3.4      RColorBrewer_1.1-3  </span></span>
+<span><span class="co">## [16] S7_0.2.2             desc_1.4.3           distributional_0.8.1</span></span>
+<span><span class="co">## [19] RcppParallel_6.2.0   assertthat_0.2.1     lifecycle_1.0.5     </span></span>
+<span><span class="co">## [22] stringr_1.6.0        compiler_4.6.1       farver_2.1.2        </span></span>
+<span><span class="co">## [25] textshaping_1.0.5    codetools_0.2-20     htmltools_0.5.9     </span></span>
+<span><span class="co">## [28] sass_0.4.10          bayesplot_1.15.0     yaml_2.3.12         </span></span>
+<span><span class="co">## [31] Formula_1.2-6        pillar_1.11.1        pkgdown_2.2.1       </span></span>
+<span><span class="co">## [34] jquerylib_0.1.4      cachem_1.1.0         StanHeaders_2.32.10 </span></span>
+<span><span class="co">## [37] abind_1.4-8          rstan_2.32.7         tidyselect_1.2.1    </span></span>
+<span><span class="co">## [40] digest_0.6.39        stringi_1.8.7        mvtnorm_1.4-2       </span></span>
+<span><span class="co">## [43] reshape2_1.4.5       purrr_1.2.2          labeling_0.4.3      </span></span>
+<span><span class="co">## [46] fastmap_1.2.0        grid_4.6.1           cli_3.6.6           </span></span>
+<span><span class="co">## [49] magrittr_2.0.5       loo_2.10.1           pkgbuild_1.4.8      </span></span>
+<span><span class="co">## [52] withr_3.0.3          scales_1.4.0         backports_1.5.1     </span></span>
+<span><span class="co">## [55] rmarkdown_2.31       matrixStats_1.5.0    otel_0.2.0          </span></span>
+<span><span class="co">## [58] gridExtra_2.3.1      ragg_1.5.2           evaluate_1.0.5      </span></span>
+<span><span class="co">## [61] rbibutils_2.4.1      rstantools_2.7.0     rlang_1.3.0         </span></span>
+<span><span class="co">## [64] isoband_0.3.0        Rcpp_1.1.2           glue_1.8.1          </span></span>
+<span><span class="co">## [67] jsonlite_2.0.0       plyr_1.8.9           R6_2.6.1            </span></span>
+<span><span class="co">## [70] systemfonts_1.3.2    fs_2.1.0</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -1706,7 +1732,7 @@ for Assessing Convergence of MCMC, Bayesian Analysis, 16 (2), 667–718.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

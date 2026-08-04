@@ -38,7 +38,8 @@ often no more a need for a hierarchical model structure at that stage.
 
 The recommended reference for more details on these approaches, how they
 relate to each other, and how they are applied in the dose-toxicity
-setting is explained in Neuenschwander et al (2016).
+setting is explained in Neuenschwander et al.
+([2016](#ref-neuenschwander2016codata)).
 
 In this vignette, we illustrate the implementation of the MAP approach,
 and describe its usage for safety monitoring in a realistic application.
@@ -46,6 +47,7 @@ and describe its usage for safety monitoring in a realistic application.
 Initial R session setup:
 
 ``` r
+
 library(OncoBayes2)
 library(RBesT)
 library(posterior)
@@ -86,7 +88,7 @@ dose-toxicity data from the two single-agent studies.
 |  100.0 |                 23 |    4 |
 |  150.0 |                  3 |    2 |
 
-Historical data from single-agent study of Drug A
+Historical data from single-agent study of Drug A {.table}
 
 | Drug B dose | Evaluable patients | DLTs |
 |------------:|-------------------:|-----:|
@@ -99,13 +101,13 @@ Historical data from single-agent study of Drug A
 |       3.000 |                 12 |    0 |
 |       4.000 |                  3 |    1 |
 
-Historical data from single-agent study of Drug B
+Historical data from single-agent study of Drug B {.table}
 
 These data were understood to be highly relevant for informing prior
 beliefs about the single-agent contributions to the combination toxicity
 in the planned study. Therefore a MAP approach was taken to develop
-priors for the respective parameters - $\alpha_{A}$, $\beta_{A}$,
-$\alpha_{B}$, and $\beta_{B}$ which are obtained by a meta-analysis of
+priors for the respective parameters - $`\alpha_A`$, $`\beta_A`$,
+$`\alpha_B`$, and $`\beta_B`$ which are obtained by a meta-analysis of
 the historical data.
 
 ## Derivation of MAP priors
@@ -121,7 +123,7 @@ in many situations. The approach is to categorize the degree of
 heterogeneity between trials in terms of anticipated differences in the
 population and further factors which depend on a specific case:
 
-| Heterogeneity degree | $\tau_{\alpha}$ | $\tau_{\beta}$ |
+| Heterogeneity degree | $`\tau_\alpha`$ | $`\tau_\beta`$ |
 |:---------------------|----------------:|---------------:|
 | small                |           0.125 |         0.0625 |
 | moderate             |           0.250 |         0.1250 |
@@ -129,7 +131,8 @@ population and further factors which depend on a specific case:
 | large                |           1.000 |         0.5000 |
 | very large           |           2.000 |         1.0000 |
 
-Heterogeneity categorization for intercept $\alpha$ and slope $\beta$
+Heterogeneity categorization for intercept $`\alpha`$ and slope
+$`\beta`$ {.table}
 
 Here we fit separate models to the historical drug-A and drug-B
 single-agent data. Note, equivalently, a single hierarchical
@@ -152,6 +155,7 @@ In order to obtain directly a sample of the MAP prior, we set the
 `sample_map` argument to `TRUE`.
 
 ``` r
+
 # historical data for drug A
 hist_A <- data.frame(
   group_id = factor("trial_A"),
@@ -193,6 +197,7 @@ map_model_A <- blrm_exnex(
 Similarly, for drug B:
 
 ``` r
+
 # historical data for drug B
 hist_B <- data.frame(
   group_id = factor("trial_B"),
@@ -243,6 +248,7 @@ extract these as `rvar` variables which simplifies working with the
 posterior draws.
 
 ``` r
+
 rvar_map_log_beta_A <- as_draws_rvars(map_model_A, variable="map_log_beta")$map_log_beta
 rvar_map_log_beta_B <- as_draws_rvars(map_model_B, variable="map_log_beta")$map_log_beta
 ```
@@ -255,6 +261,7 @@ such that we directly select the respective entries of the array here
 array):
 
 ``` r
+
 rvar_map_log_beta_A[1,"log(drug_A/dref_A)",,drop=TRUE]
 ```
 
@@ -263,6 +270,7 @@ rvar_map_log_beta_A[1,"log(drug_A/dref_A)",,drop=TRUE]
     ## -1.73 ± 0.82   0.34 ± 0.72
 
 ``` r
+
 rvar_map_log_beta_B[1,"log(drug_B/dref_B)",,drop=TRUE]
 ```
 
@@ -284,6 +292,7 @@ function expects the posterior samples in matrix form such that we
 convert the draws accordingly:
 
 ``` r
+
 map_mix_A <- automixfit(draws_of(rvar_map_log_beta_A[1,"log(drug_A/dref_A)",,drop=TRUE]),
                         type = "mvnorm")
 map_mix_A
@@ -304,6 +313,7 @@ map_mix_A
     ## rho[log_slope,intercept] -0.29870546  0.12832698
 
 ``` r
+
 map_mix_B <- automixfit(draws_of(rvar_map_log_beta_B[1,"log(drug_B/dref_B)",,drop=TRUE]),
                         type = "mvnorm")
 map_mix_B
@@ -327,6 +337,7 @@ The appropriateness of the parametric approximation to the MCMC sample
 can be visually inspected using the `plot` function from `RBesT`:
 
 ``` r
+
 plot(map_mix_A)$mixpairs
 ```
 
@@ -336,6 +347,7 @@ plot(map_mix_A)$mixpairs
 ![](map_approach_files/figure-html/mixfit_plot_A-1.png)
 
 ``` r
+
 # plot(map_mix_B)$mixpairs  # respective plot for drug B
 ```
 
@@ -346,10 +358,11 @@ combination dose-toxicity model in the new study. In this combination
 model we now do not need any longer a hierarchical model structure such
 we turn this part of the model off by setting `tau_prior_dist=NULL`.
 Note that doing so merely setups the model to use known heterogeneities
-$\tau$ which are fixed to a zero mean, which is what subsequent output
+$`\tau`$ which are fixed to a zero mean, which is what subsequent output
 will display. A detailed description of this model is found in appendix.
 
 ``` r
+
 # one row of dummy data with number of patients set to zero in order
 # to allow the model to be fit
 dummy_data_AB <- data.frame(
@@ -383,6 +396,7 @@ in the novel combination. We can visualize the prior distributions for
 the DLT rates:
 
 ``` r
+
 doses <- expand_grid(
   group_id = "trial_AB",
   drug_A = c(25, 50, 80, 100),
@@ -401,7 +415,7 @@ plot_toxicity_curve(map_combo,
     ## ℹ Please use `linewidth` instead.
     ## ℹ The deprecated feature was likely used in the OncoBayes2 package.
     ##   Please report the issue at <https://github.com/Novartis/OncoBayes2/issues>.
-    ## This warning is displayed once every 8 hours.
+    ## This warning is displayed once per session.
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
@@ -411,6 +425,7 @@ We also now have an understanding of which combination doses may have a
 high risk of DLTs in terms of the posterior mean,
 
 ``` r
+
 map_summ <- summary(map_combo, newdata = doses, interval_prob = c(0, 0.16, 0.33, 1))
 kable(
   cbind(doses[c("drug_A", "drug_B")], map_summ[c("mean", "sd", "(0.33,1]")]),
@@ -435,12 +450,13 @@ kable(
 |     80 |    3.0 | 0.35 | 0.29 |                0.45 |
 |    100 |    3.0 | 0.39 | 0.31 |                0.49 |
 
-Posterior summary statistics for P(DLT) by dose
+Posterior summary statistics for P(DLT) by dose {.table}
 
 and the posterior predictive distribution when assuming a specific
 cohort size (6 used as example here):
 
 ``` r
+
 map_pred_summ <- summary(map_combo,
                          newdata = mutate(doses, num_toxicities=0, num_patients=6),
                          predictive=TRUE, interval_prob = c(-1, 0, 1, 6))
@@ -467,7 +483,7 @@ kable(
 |     80 |    3.0 |           0.29 |           0.19 |              0.52 |
 |    100 |    3.0 |           0.26 |           0.17 |              0.56 |
 
-Posterior predictive summary for Pr(DLT) by dose
+Posterior predictive summary for Pr(DLT) by dose {.table}
 
 One can see that under the combination one has to decrease the starting
 doses well below the declared MTDs for each drug. This is a consequence
@@ -500,6 +516,7 @@ the EXNEX model is a joint model fit.
 The robust MAP approach is implemented as:
 
 ``` r
+
 # weakly-informative mixture component is chosen here to be equal to
 # the priors used in the first place
 weak_A <- prior_A
@@ -517,6 +534,7 @@ robust_map_combo <- update(map_combo, prior_EX_mu_comp = mix_robust)
 ```
 
 ``` r
+
 # disabled plot here
 plot_toxicity_curve(robust_map_combo,
                     newdata = doses,
@@ -533,6 +551,7 @@ implementation of the latter approach.
 First, we combine the data from all three sources.
 
 ``` r
+
 groups <- c("trial_A", "trial_B", "trial_AB")
 mac_data <- bind_rows_0(hist_A, hist_B)
 mac_data$group_id <- factor(as.character(mac_data$group_id), levels = groups)
@@ -543,9 +562,10 @@ double-combination BLRM, whose detailed specification can be found in
 the appendix. Note that the hierarchical model on the interaction
 parameter is not present in the combination model. This cannot be turned
 off here such that we assign a negligibly small mean value for the
-$\tau$ interaction heterogeneity.
+$`\tau`$ interaction heterogeneity.
 
 ``` r
+
 dummy_tau_inter <- mixmvnorm(c(1.0, log(1E-4), (log(2) / 1.96)^2))
 
 num_comp   <- 2 # number of treatment components
@@ -576,6 +596,7 @@ mac_combo <- blrm_exnex(
 Now we compare posterior inference for the DLT rates:
 
 ``` r
+
 mac_summ <- summary(mac_combo, newdata = doses, interval_prob = c(0, 0.16, 0.33, 1))
 kable(
   cbind(doses[c("drug_A", "drug_B")],
@@ -592,56 +613,67 @@ kable(
 ```
 
 | Drug A | Drug B | MAP mean | MAC mean | \|MAP mean - MAC mean\| | MAP P(DLT rate \> 0.33) | MAC P(DLT rate \> 0.33) |
-|-------:|-------:|---------:|---------:|------------------------:|------------------------:|------------------------:|
-|     25 |    0.5 |     0.10 |     0.10 |                       0 |                    0.01 |                    0.02 |
-|     50 |    0.5 |     0.16 |     0.16 |                       0 |                    0.08 |                    0.09 |
-|     80 |    0.5 |     0.24 |     0.24 |                       0 |                    0.26 |                    0.25 |
-|    100 |    0.5 |     0.30 |     0.30 |                       0 |                    0.37 |                    0.37 |
-|     25 |    1.0 |     0.13 |     0.13 |                       0 |                    0.05 |                    0.05 |
-|     50 |    1.0 |     0.19 |     0.19 |                       0 |                    0.19 |                    0.17 |
-|     80 |    1.0 |     0.28 |     0.28 |                       0 |                    0.33 |                    0.33 |
-|    100 |    1.0 |     0.33 |     0.33 |                       0 |                    0.43 |                    0.42 |
-|     25 |    3.0 |     0.23 |     0.23 |                       0 |                    0.25 |                    0.23 |
-|     50 |    3.0 |     0.29 |     0.29 |                       0 |                    0.36 |                    0.35 |
-|     80 |    3.0 |     0.35 |     0.35 |                       0 |                    0.45 |                    0.44 |
-|    100 |    3.0 |     0.39 |     0.39 |                       0 |                    0.49 |                    0.51 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 25 | 0.5 | 0.10 | 0.10 | 0 | 0.01 | 0.02 |
+| 50 | 0.5 | 0.16 | 0.16 | 0 | 0.08 | 0.09 |
+| 80 | 0.5 | 0.24 | 0.24 | 0 | 0.26 | 0.25 |
+| 100 | 0.5 | 0.30 | 0.30 | 0 | 0.37 | 0.37 |
+| 25 | 1.0 | 0.13 | 0.13 | 0 | 0.05 | 0.05 |
+| 50 | 1.0 | 0.19 | 0.19 | 0 | 0.19 | 0.17 |
+| 80 | 1.0 | 0.28 | 0.28 | 0 | 0.33 | 0.33 |
+| 100 | 1.0 | 0.33 | 0.33 | 0 | 0.43 | 0.42 |
+| 25 | 3.0 | 0.23 | 0.23 | 0 | 0.25 | 0.23 |
+| 50 | 3.0 | 0.29 | 0.29 | 0 | 0.36 | 0.35 |
+| 80 | 3.0 | 0.35 | 0.35 | 0 | 0.45 | 0.44 |
+| 100 | 3.0 | 0.39 | 0.39 | 0 | 0.49 | 0.51 |
 
-Posterior summary statistics for P(DLT) by dose
+Posterior summary statistics for P(DLT) by dose {.table}
 
 ## Appendix: Model specification
 
 ### Combination BLRM (new study model)
 
-Let $d_{A}$ and $d_{B}$ represent the doses of drugs A and B,
+Let $`d_A`$ and $`d_B`$ represent the doses of drugs A and B,
 respectively. The dose-toxicity model for the combination expresses the
-DLT probability $\pi_{AB}\left( d_{A},d_{B} \right)$ as a function of
-the doses, through the following model for the DLT odds
+DLT probability $`\pi_{AB}(d_A, d_B)`$ as a function of the doses,
+through the following model for the DLT odds
 
-$$\frac{\pi_{AB}\left( d_{A},d_{B} \right)}{1 - \pi_{AB}\left( d_{A},d_{B} \right)} = \frac{\pi_{\bot}\left( d_{A},d_{B} \right)}{1 - \pi_{\bot}\left( d_{A},d_{B} \right)} \cdot \exp\left\{ 2\eta\frac{\left( d_{A}d_{B} \right)/\left( d_{A}^{*}d_{B}^{*} \right)}{1 + \left( d_{A}d_{B} \right)/\left( d_{A}^{*}d_{B}^{*} \right)} \right\}.$$
+``` math
+ \frac{\pi_{AB}(d_A, d_B)}{1 - \pi_{AB}(d_A, d_B)} =
+\frac{\pi_\perp(d_A, d_B)}{1 - \pi_\perp(d_A, d_B)} \cdot \exp\left\{
+2 \eta \frac{(d_A d_B) / (d_A^* d_B^*) }{1 + (d_A d_B) / (d_A^*
+d_B^*)}\right\}. 
+```
 
 The two terms on the right-hand side are, respectively, the odds of DLT
 under assumed independence of action for the two drugs, i.e.
 
-$$\pi_{\bot}\left( d_{A},d_{B} \right) = 1 - \left( 1 - \pi_{A}\left( d_{A} \right) \right)\left( 1 - \pi_{B}\left( d_{B} \right) \right)$$
+``` math
+\pi_\perp(d_A, d_B) = 1 - (1 - \pi_A(d_A))(1 - \pi_B(d_B)) 
+```
 
 and an interaction term which allows for modelling drug toxicity
 interactions. See Widmer et al (2023) for a discussion of the
 interaction model.
 
-The terms $\pi_{A}\left( d_{A} \right)$ and
-$\pi_{B}\left( d_{B} \right)$ represent the toxicity risk under each
-single-agent, respectively, and are modelled with logistic regression as
-in Neuenschwander et al (2008):
+The terms $`\pi_A(d_A)`$ and $`\pi_B(d_B)`$ represent the toxicity risk
+under each single-agent, respectively, and are modelled with logistic
+regression as in Neuenschwander et al.
+([2008](#ref-neuenschwander2008)):
 
-$$\pi_{A}\left( d_{A} \right) = \log\left( \alpha_{A} \right) + \beta_{A}\log\left( d_{A}/d_{A}^{*} \right)$$
+``` math
+\pi_A(d_A) = \log(\alpha_A) + \beta_A \log(d_A / d_A^*)
+```
 
-$$\pi_{B}\left( d_{B} \right) = \log\left( \alpha_{B} \right) + \beta_{B}\log\left( d_{B}/d_{B}^{*} \right)$$
+``` math
+\pi_B(d_B) = \log(\alpha_B) + \beta_B \log(d_B / d_B^*)
+```
 
-The model parameters are hence $\alpha_{A},\beta_{A},\alpha_{B}$ and
-$\beta_{B}$ (the intercepts and slopes determining the dose-toxicity
-curve for the two single agents), and $\eta$ (controlling the magnitude
-of drug toxicity interactions), while $d_{A}^{*}$ and $d_{B}^{*}$ are
-fixed pre-specified reference doses for each drug.
+The model parameters are hence $`\alpha_A, \beta_A, \alpha_B`$ and
+$`\beta_B`$ (the intercepts and slopes determining the dose-toxicity
+curve for the two single agents), and $`\eta`$ (controlling the
+magnitude of drug toxicity interactions), while $`d_A^*`$ and $`d_B^*`$
+are fixed pre-specified reference doses for each drug.
 
 This parametrization is convenient because in many such situations,
 relevant information is available to inform prior distributions for the
@@ -653,16 +685,21 @@ models.
 
 For the intercepts and slopes, the MAP priors have the form
 
-$$\left( \log\alpha_{A},\log\beta_{A} \right) \sim \sum\limits_{k = 1}^{K_{A}}w_{Ak}\text{BVN}\left( \mathbf{m}_{Ak},\mathbf{S}_{Ak} \right),$$
+``` math
+ (\log \alpha_A, \log \beta_A ) \sim \sum_{k = 1}^{K_A} w_{Ak} \mbox{BVN}( \mathbf m_{Ak}, \mathbf S_{Ak} ), 
+```
 
 and
 
-$$\left( \log\alpha_{B},\log\beta_{B} \right) \sim \sum\limits_{k = 1}^{K_{B}}w_{Bk}\text{BVN}\left( \mathbf{m}_{Bk},\mathbf{S}_{Bk} \right),$$
+``` math
+ (\log \alpha_B, \log \beta_B ) \sim \sum_{k = 1}^{K_B} w_{Bk} \mbox{BVN}( \mathbf m_{Bk}, \mathbf S_{Bk} ), 
+```
 
 where the bivariate normal mixtures have been chosen to approximate the
 MAP distribution, i.e.
 
 ``` r
+
 map_mix_A
 ```
 
@@ -683,6 +720,7 @@ map_mix_A
 and
 
 ``` r
+
 map_mix_B
 ```
 
@@ -700,11 +738,10 @@ map_mix_B
     ## s[log_slope]              0.40861667  0.51156577  0.40148441
     ## rho[log_slope,intercept] -0.39229212 -0.05739021 -0.50121005
 
-For the interaction, the prior distribution
-$\eta \sim \text{N}\left( 0,\left( \log(9)/1.96 \right)^{2} \right)$ was
-used. This prior is centered at zero interaction, and 95% of the
-probability mass falls between DLT odds multipliers of $1/9$ and $9$
-(relative to the no-interaction model).
+For the interaction, the prior distribution $`\eta \sim \mbox{N}(0,
+(\log(9)/1.96)^2)`$ was used. This prior is centered at zero
+interaction, and 95% of the probability mass falls between DLT odds
+multipliers of $`1/9`$ and $`9`$ (relative to the no-interaction model).
 
 ### Meta-analytic models for the historical data
 
@@ -713,42 +750,66 @@ historical data, allowing for the possibility of between-study
 heterogeneity.
 
 We describe this model for drug A (drug B being analogous). For
-historical studies $h = 1,\ldots,H$ (in this case $H = 1$), the DLT
-probability for dose $d_{A}$ is modelled as
+historical studies $`h =1 ,\ldots, H`$ (in this case $`H=1`$), the DLT
+probability for dose $`d_A`$ is modelled as
 
-$$\pi_{Ah}\left( d_{A} \right) = \log\alpha_{Ah} + \beta_{Ah}\log\left( d_{A}/d_{A}^{*} \right).$$
+``` math
+ \pi_{Ah}(d_A) = \log \alpha_{Ah} + \beta_{Ah} \log(d_A / d_A^*). 
+```
 
 Model parameters are assumed to be exchangeable across studies:
 
-$$\left( \log\alpha_{Ah},\log\beta_{Ah} \right)\,\, \sim \,\,\text{BVN}(\left( \mu_{\alpha A},\mu_{\beta A} \right),\mathbf{\Sigma}_{A})\mspace{30mu}{\text{for}\mspace{6mu}}h = 1,\ldots,H,$$
+``` math
+ (\log \alpha_{Ah}, \log \beta_{Ah})  \, \, \sim \, \,
+\mbox{BVN}\bigl( (\mu_{\alpha A}, \mu_{\beta A}), \boldsymbol \Sigma_A
+\bigr) \hspace{20pt} \text{for }h = 1,\ldots, H, 
+```
 
 and to facilitate prediction of the dose-toxicity curve in a new study,
 we additionally assume that the study-level parameters for the new study
 are exchangeable with those of the historical studies:
 
-$$\left( \log\alpha_{A \star},\log\beta_{A \star} \right)\,\, \sim \,\,\text{BVN}(\left( \mu_{\alpha A},\mu_{\beta A} \right),\mathbf{\Sigma}_{A}).$$
+``` math
+ (\log \alpha_{A\star}, \log \beta_{A\star}) \, \, \sim \, \,
+\mbox{BVN}\bigl( (\mu_{\alpha A}, \mu_{\beta A}), \boldsymbol \Sigma_A
+\bigr). 
+```
 
-Here, $\mathbf{\Sigma}_{A}$ is a $2 \times 2$ covariance matrix with
-standard deviations $\tau_{\alpha A}$ and $\tau_{\beta A}$, and
-correlation $\rho_{A}$.
+Here, $`\boldsymbol \Sigma_A`$ is a $`2 \times 2`$ covariance matrix
+with standard deviations $`\tau_{\alpha A}`$ and $`\tau_{\beta A}`$, and
+correlation $`\rho_A`$.
 
 This exchangeability assumption allows for posterior estimation of the
 MAP distribution for a study-level parameters in a new study, given
 historical data:
 
-$$f\left( \alpha_{A \star},\beta_{A \star}|\mathbf{x}_{\text{hist}} \right) = \int f\left( \alpha_{A \star},\beta_{A \star}|\mu_{\alpha A},\mu_{\beta A},\tau_{\alpha A},\tau_{\beta A},\rho \right)\,\, dF\left( \mu_{\alpha A},\mu_{\beta A},\tau_{\alpha A},\tau_{\beta A}|\mathbf{x}_{\text{hist}} \right).$$
+``` math
+ f(\alpha_{A\star}, \beta_{A\star} | \mathbf x_{\text{hist}}) = \int f(\alpha_{A\star}, \beta_{A\star} | \mu_{\alpha A}, \mu_{\beta A}, \tau_{\alpha A}, \tau_{\beta A}, \rho) \, \, dF(\mu_{\alpha A}, \mu_{\beta A}, \tau_{\alpha A}, \tau_{\beta A} | \mathbf x_{\text{hist}}). 
+```
 
 The model is completed with normal priors for the means
 
-$$\mu_{\alpha A} \sim \text{N}\left( m_{\alpha A},s_{\alpha A}^{2} \right)$$$$\mu_{\beta A} \sim \text{N}\left( m_{\beta A},s_{\beta A}^{2} \right)$$
+``` math
+ \mu_{\alpha A} \sim \mbox{N} ( m_{\alpha A}, s^2_{\alpha A}) 
+```
+``` math
+ \mu_{\beta A} \sim \mbox{N} ( m_{\beta A}, s^2_{\beta A}) 
+```
 
 lognormal priors for the standard deviations,
 
-$$\log\tau_{\alpha A} \sim \text{N}\left( m_{\tau\alpha A},s_{\tau\alpha A}^{2} \right)$$$$\log\tau_{\beta A} \sim \text{N}\left( m_{\tau\beta A},s_{\tau\beta A}^{2} \right)$$
+``` math
+ \log \tau_{\alpha A} \sim \mbox{N}( m_{\tau \alpha A}, s^2_{\tau \alpha A}) 
+```
+``` math
+ \log \tau_{\beta A} \sim \mbox{N}( m_{\tau \beta A}, s^2_{\tau \beta A}) 
+```
 
 and for the correlation,
 
-$$\rho_{A} \sim \text{U}( - 1,1).$$
+``` math
+ \rho_A \sim \mbox{U}(-1, 1). 
+```
 
 #### Prior specification
 
@@ -756,52 +817,99 @@ Both models, for drugs A and B, used the same set of hyper-parameters:
 
 - Intercept mean and standard deviation:
 
-$$m_{\alpha A} = m_{\alpha B} = \text{logit}(0.2)$$$$s_{\alpha A} = s_{\alpha B} = 1$$
+``` math
+m_{\alpha A} = m_{\alpha B} = \mbox{logit}(0.2)
+```
+``` math
+s_{\alpha A} = s_{\alpha B} = 1
+```
 
 - Slope mean and standard deviation:
 
-$$m_{\beta A} = m_{\beta B} = \log(1)$$$$s_{\beta A} = s_{\beta B} = \left( \log 4 \right)/1.96$$
+``` math
+m_{\beta A} = m_{\beta B} = \log(1)
+```
+``` math
+s_{\beta A} = s_{\beta B} = (\log 4) / 1.96
+```
 
 - Heterogeneity standard deviations:
 
-$$m_{\tau\alpha A} = m_{\tau\alpha B} = \log(0.25)$$$$m_{\tau\beta A} = m_{\tau\beta B} = \log(0.125)$$$$s_{\tau\alpha A} = s_{\tau\beta A} = s_{\tau\alpha B} = s_{\tau\beta B} = \left( \log 2 \right)/1.96$$
+``` math
+m_{\tau \alpha A} = m_{\tau \alpha B} = \log(0.25)
+```
+``` math
+m_{\tau \beta A} = m_{\tau \beta B} = \log(0.125)
+```
+``` math
+s_{\tau \alpha A} = s_{\tau \beta A} = s_{\tau \alpha B} = s_{\tau \beta B} = (\log 2) / 1.96
+```
 
 ### Hierarchical model for combined data (MAC)
 
 The MAC model is a combined model for data from all sources (both
-single-agent trials and the planned combination study). Letting $i$
+single-agent trials and the planned combination study). Letting $`i`$
 index these sources, the model covers toxicity of any combination of
 doses of the two agents:
 
-$$\frac{\pi_{i}\left( d_{A},d_{B} \right)}{1 - \pi_{i}\left( d_{A},d_{B} \right)} = \frac{\pi_{\bot,i}\left( d_{A},d_{B} \right)}{1 - \pi_{\bot,i}\left( d_{A},d_{B} \right)} \cdot \exp\left\{ 2\eta_{i}\frac{\left( d_{A}d_{B} \right)/\left( d_{A}^{*}d_{B}^{*} \right)}{1 + \left( d_{A}d_{B} \right)/\left( d_{A}^{*}d_{B}^{*} \right)} \right\}.$$
+``` math
+ \frac{\pi_i(d_A, d_B)}{1 - \pi_i(d_A, d_B)} = \frac{\pi_{\perp, i}(d_A, d_B)}{1 - \pi_{\perp, i}(d_A, d_B)} \cdot \exp\left\{ 2 \eta_i \frac{(d_A d_B) / (d_A^* d_B^*) }{1 + (d_A d_B) / (d_A^* d_B^*)}\right\}. 
+```
 With, as before
 
-$$\pi_{\bot,i}\left( d_{A},d_{B} \right) = 1 - \left( 1 - \pi_{Ai}\left( d_{A} \right) \right)\left( 1 - \pi_{Bi}\left( d_{B} \right) \right)$$
+``` math
+\pi_{\perp,i}(d_A, d_B) = 1 - (1 - \pi_{Ai}(d_A))(1 - \pi_{Bi}(d_B)) 
+```
 
 and
-$$\pi_{Ai}\left( d_{A} \right) = \log\left( \alpha_{Ai} \right) + \beta_{Ai}\log\left( d_{A}/d_{A}^{*} \right)$$$$\pi_{Bi}\left( d_{B} \right) = \log\left( \alpha_{Bi} \right) + \beta_{Bi}\log\left( d_{B}/d_{B}^{*} \right)$$
+``` math
+ \pi_{Ai}(d_A) = \log(\alpha_{Ai}) + \beta_{Ai} \log(d_A / d_A^*)
+```
+``` math
+ \pi_{Bi}(d_B) = \log(\alpha_{Bi}) + \beta_{Bi} \log(d_B / d_B^*)
+```
 
 And as before, ex-changeability assumptions facilitate information
 borrowing across data sources.
 
-$$\left( \log\alpha_{Ai},\log\beta_{Ai} \right)\,\, \sim \,\,\text{BVN}(\left( \mu_{\alpha A},\mu_{\beta A} \right),\mathbf{\Sigma}_{A})\mspace{30mu}{\text{for}\mspace{6mu}}i = 1,\ldots,I$$$$\left( \log\alpha_{Bi},\log\beta_{Bi} \right)\,\, \sim \,\,\text{BVN}(\left( \mu_{\alpha B},\mu_{\beta B} \right),\mathbf{\Sigma}_{B})\mspace{30mu}{\text{for}\mspace{6mu}}i = 1,\ldots,I$$
+``` math
+ (\log \alpha_{Ai}, \log \beta_{Ai})  \, \, \sim \, \, \mbox{BVN}\bigl( (\mu_{\alpha A}, \mu_{\beta A}), \boldsymbol \Sigma_A \bigr) \hspace{20pt} \text{for }i = 1,\ldots, I 
+```
+``` math
+ (\log \alpha_{Bi}, \log \beta_{Bi})  \, \, \sim \, \, \mbox{BVN}\bigl( (\mu_{\alpha B}, \mu_{\beta B}), \boldsymbol \Sigma_B \bigr) \hspace{20pt} \text{for }i = 1,\ldots, I 
+```
 and
 
-$$\eta_{i} \sim \text{N}\left( \mu_{\eta},\tau_{\eta}^{2} \right).$$
+``` math
+ \eta_i \sim \mbox{N}(\mu_\eta, \tau^2_\eta). 
+```
 
-Priors for the exchangeable means $\mu$ and variances $\tau$ are
+Priors for the exchangeable means $`\mu`$ and variances $`\tau`$ are
 identical to the meta-analytic models for the historical single-agent
 data in the previous section.
+
+## References
+
+Neuenschwander, Beat, Michael Branson, and Thomas Gsponer. 2008.
+“Critical Aspects of the Bayesian Approach to Phase I Cancer Trials.”
+*Statistics in Medicine* 27 (13): 2420–39.
+<https://doi.org/10.1002/sim.3230>.
+
+Neuenschwander, Beat, Satrajit Roychoudhury, and Heinz Schmidli. 2016.
+“On the Use of Co-Data in Clinical Trials.” *Statistics in
+Biopharmaceutical Research* 8 (3): 345–54.
+<https://doi.org/10.1080/19466315.2016.1174149>.
 
 ## Session Info
 
 ``` r
+
 sessionInfo()
 ```
 
-    ## R version 4.5.2 (2025-10-31)
+    ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
-    ## Running under: Ubuntu 24.04.3 LTS
+    ## Running under: Ubuntu 24.04.4 LTS
     ## 
     ## Matrix products: default
     ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -820,31 +928,31 @@ sessionInfo()
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ## [1] ggplot2_4.0.1    knitr_1.50       tidyr_1.3.1      dplyr_1.1.4     
-    ## [5] posterior_1.6.1  OncoBayes2_0.9-4 RBesT_1.8-2     
+    ## [1] ggplot2_4.0.3     knitr_1.51        tidyr_1.3.2       dplyr_1.2.1      
+    ## [5] posterior_1.7.0   OncoBayes2_0.10-0 RBesT_1.10-0     
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] gtable_0.3.6          tensorA_0.36.2.1      xfun_0.55            
-    ##  [4] bslib_0.9.0           QuickJSR_1.8.1        inline_0.3.21        
-    ##  [7] vctrs_0.6.5           tools_4.5.2           generics_0.1.4       
-    ## [10] stats4_4.5.2          parallel_4.5.2        tibble_3.3.0         
-    ## [13] pkgconfig_2.0.3       checkmate_2.3.3       RColorBrewer_1.1-3   
-    ## [16] S7_0.2.1              desc_1.4.3            distributional_0.5.0 
-    ## [19] RcppParallel_5.1.11-1 assertthat_0.2.1      lifecycle_1.0.4      
-    ## [22] compiler_4.5.2        farver_2.1.2          stringr_1.6.0        
-    ## [25] textshaping_1.0.4     codetools_0.2-20      htmltools_0.5.9      
-    ## [28] sass_0.4.10           bayesplot_1.15.0      yaml_2.3.12          
-    ## [31] Formula_1.2-5         crayon_1.5.3          pillar_1.11.1        
-    ## [34] pkgdown_2.2.0         jquerylib_0.1.4       cachem_1.1.0         
-    ## [37] StanHeaders_2.32.10   abind_1.4-8           rstan_2.32.7         
-    ## [40] tidyselect_1.2.1      digest_0.6.39         mvtnorm_1.3-3        
-    ## [43] stringi_1.8.7         reshape2_1.4.5        purrr_1.2.0          
-    ## [46] labeling_0.4.3        fastmap_1.2.0         grid_4.5.2           
-    ## [49] cli_3.6.5             magrittr_2.0.4        loo_2.8.0            
-    ## [52] pkgbuild_1.4.8        withr_3.0.2           scales_1.4.0         
-    ## [55] backports_1.5.0       rmarkdown_2.30        matrixStats_1.5.0    
-    ## [58] gridExtra_2.3         ragg_1.5.0            evaluate_1.0.5       
-    ## [61] rstantools_2.5.0      rlang_1.1.6           isoband_0.3.0        
-    ## [64] Rcpp_1.1.0            glue_1.8.0            jsonlite_2.0.0       
-    ## [67] R6_2.6.1              plyr_1.8.9            systemfonts_1.3.1    
-    ## [70] fs_1.6.6
+    ##  [1] gtable_0.3.6         tensorA_0.36.2.1     xfun_0.60           
+    ##  [4] bslib_0.12.0         QuickJSR_1.10.0      inline_0.3.21       
+    ##  [7] vctrs_0.7.3          tools_4.6.1          Rdpack_2.6.6        
+    ## [10] generics_0.1.4       stats4_4.6.1         parallel_4.6.1      
+    ## [13] tibble_3.3.1         pkgconfig_2.0.3      checkmate_2.3.4     
+    ## [16] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3          
+    ## [19] distributional_0.8.1 RcppParallel_6.2.0   assertthat_0.2.1    
+    ## [22] lifecycle_1.0.5      stringr_1.6.0        compiler_4.6.1      
+    ## [25] farver_2.1.2         textshaping_1.0.5    codetools_0.2-20    
+    ## [28] htmltools_0.5.9      sass_0.4.10          bayesplot_1.15.0    
+    ## [31] yaml_2.3.12          Formula_1.2-6        pillar_1.11.1       
+    ## [34] pkgdown_2.2.1        jquerylib_0.1.4      cachem_1.1.0        
+    ## [37] StanHeaders_2.32.10  abind_1.4-8          rstan_2.32.7        
+    ## [40] tidyselect_1.2.1     digest_0.6.39        stringi_1.8.7       
+    ## [43] mvtnorm_1.4-2        reshape2_1.4.5       purrr_1.2.2         
+    ## [46] labeling_0.4.3       fastmap_1.2.0        grid_4.6.1          
+    ## [49] cli_3.6.6            magrittr_2.0.5       loo_2.10.1          
+    ## [52] pkgbuild_1.4.8       withr_3.0.3          scales_1.4.0        
+    ## [55] backports_1.5.1      rmarkdown_2.31       matrixStats_1.5.0   
+    ## [58] otel_0.2.0           gridExtra_2.3.1      ragg_1.5.2          
+    ## [61] evaluate_1.0.5       rbibutils_2.4.1      rstantools_2.7.0    
+    ## [64] rlang_1.3.0          isoband_0.3.0        Rcpp_1.1.2          
+    ## [67] glue_1.8.1           jsonlite_2.0.0       plyr_1.8.9          
+    ## [70] R6_2.6.1             systemfonts_1.3.2    fs_2.1.0

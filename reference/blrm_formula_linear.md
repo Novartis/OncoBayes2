@@ -38,6 +38,7 @@ The function returns an object of class `blrm_formula`.
 ## Examples
 
 ``` r
+
 ref_doses <- c(drug_A = 10, drug_B = 20)
 
 # can be used with blrm_trial

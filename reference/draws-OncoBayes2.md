@@ -1,7 +1,5 @@
 # Transform `blrmfit` or `blrm_trial` to `draws` objects
 
-**\[experimental\]**
-
 Transform a `blrmfit` or `blrm_trial` object to a format supported by
 the posterior package.
 
@@ -76,9 +74,6 @@ To subset iterations, chains, or draws, use the
 [`posterior::subset_draws()`](https://mc-stan.org/posterior/reference/subset_draws.html)
 method after transforming the input object to a `draws` object.
 
-The function is experimental as the set of exported posterior variables
-are subject to updates.
-
 ## See also
 
 [`posterior::draws()`](https://mc-stan.org/posterior/reference/draws.html)
@@ -87,12 +82,7 @@ are subject to updates.
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 # fit an example model. See documentation for "combo2" example
 example_model("combo2")
@@ -127,15 +117,6 @@ example_model("combo2")
 #>    prior_EX_prob_inter = matrix(1, nrow = num_groups, ncol = num_inter),
 #>    prior_tau_dist = 1
 #>  )
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
 
 post <- as_draws(blrmfit)
 

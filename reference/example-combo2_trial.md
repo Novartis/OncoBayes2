@@ -29,12 +29,7 @@ Other blrm_trial combo2 example:
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 library(tibble)
 library(dplyr)
@@ -88,25 +83,6 @@ combo2_trial_start <- update(
    ),
    prior_tau_dist = 1
  )
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
-#> Warning: 11 out of 42 ewoc metrics have not converged (some Rhats are > 1.1).
-#> Be careful when analysing the results! It is recommended to run
-#> more iterations and/or setting stronger priors.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
-#> Warning: 16 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
-#> Be careful when using the imprecise ewoc estimates! It is recommended to run
-#> more iterations and review doses close to critical thresholds.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
 
 # print summary of prior specification
 prior_summary(combo2_trial_start)
@@ -212,18 +188,18 @@ summary(combo2_trial_start, "data_prediction")
 # summarize inference at specified dose levels
 summary(combo2_trial_start, "dose_prediction")
 #> # A tibble: 42 × 14
-#>    group_id drug_A drug_B dose_id stratum_id   mean     sd   `2.5%`   `50%`
-#>    <fct>     <dbl>  <dbl>   <int> <fct>       <dbl>  <dbl>    <dbl>   <dbl>
-#>  1 trial_A     3        0       1 all        0.0142 0.0138 0.000137 0.00842
-#>  2 trial_A     4.5      0       2 all        0.0522 0.0379 0.00545  0.0498 
-#>  3 trial_A     6        0       3 all        0.144  0.0903 0.0652   0.0982 
-#>  4 trial_A     8        0       4 all        0.373  0.202  0.141    0.380  
-#>  5 IIT         0      400       5 all        0.0445 0.0727 0.000623 0.00830
-#>  6 IIT         0      600       6 all        0.0641 0.0925 0.00287  0.0183 
-#>  7 IIT         0      800       7 all        0.0869 0.107  0.00821  0.0366 
-#>  8 IIT         3        0       8 all        0.0212 0.0269 0.000382 0.0136 
-#>  9 IIT         3      400       9 all        0.0728 0.112  0.00518  0.0318 
-#> 10 IIT         3      600      10 all        0.0967 0.142  0.00701  0.0407 
+#>    group_id drug_A drug_B dose_id stratum_id   mean     sd     `2.5%`  `50%`
+#>    <fct>     <dbl>  <dbl>   <int> <fct>       <dbl>  <dbl>      <dbl>  <dbl>
+#>  1 trial_A     3        0       1 all        0.0404 0.0559 0.00000285 0.0178
+#>  2 trial_A     4.5      0       2 all        0.0726 0.0705 0.000641   0.0520
+#>  3 trial_A     6        0       3 all        0.140  0.0901 0.0183     0.122 
+#>  4 trial_A     8        0       4 all        0.329  0.207  0.0535     0.282 
+#>  5 IIT         0      400       5 all        0.0388 0.0510 0.000311   0.0241
+#>  6 IIT         0      600       6 all        0.0691 0.0675 0.00329    0.0531
+#>  7 IIT         0      800       7 all        0.111  0.0839 0.0149     0.0918
+#>  8 IIT         3        0       8 all        0.0450 0.0687 0.00000400 0.0181
+#>  9 IIT         3      400       9 all        0.0845 0.0864 0.00284    0.0580
+#> 10 IIT         3      600      10 all        0.116  0.101  0.00881    0.0878
 #> # ℹ 32 more rows
 #> # ℹ 5 more variables: `97.5%` <dbl>, prob_underdose <dbl>, prob_target <dbl>,
 #> #   prob_overdose <dbl>, ewoc_ok <lgl>
@@ -241,25 +217,6 @@ new_data <- filter(codata_combo2, cohort_time > 0)
 
 combo2_trial <- update(combo2_trial_start, add_data = new_data)
 #> stratum_id not given, but only one stratum defined. Assigning first stratum.
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
-#> Warning: 17 out of 42 ewoc metrics have not converged (some Rhats are > 1.1).
-#> Be careful when analysing the results! It is recommended to run
-#> more iterations and/or setting stronger priors.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
-#> Warning: 11 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
-#> Be careful when using the imprecise ewoc estimates! It is recommended to run
-#> more iterations and review doses close to critical thresholds.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
 
 summary(combo2_trial, "data") # cohort_time is tracked
 #> # A tibble: 27 × 8
@@ -297,18 +254,18 @@ summary(combo2_trial, "data_prediction")
 #> #   prob_overdose <dbl>, ewoc_ok <lgl>
 summary(combo2_trial, "dose_prediction")
 #> # A tibble: 42 × 14
-#>    group_id drug_A drug_B dose_id stratum_id     mean       sd    `2.5%`   `50%`
-#>    <fct>     <dbl>  <dbl>   <int> <fct>         <dbl>    <dbl>     <dbl>   <dbl>
-#>  1 trial_A     3        0       1 all        0.000317 0.000580   6.95e-6 6.01e-5
-#>  2 trial_A     4.5      0       2 all        0.00616  0.00688    9.10e-4 3.03e-3
-#>  3 trial_A     6        0       3 all        0.0624   0.0316     2.69e-2 6.29e-2
-#>  4 trial_A     8        0       4 all        0.482    0.0967     3.14e-1 4.72e-1
-#>  5 IIT         0      400       5 all        0.0915   0.0849     7.11e-3 6.60e-2
-#>  6 IIT         0      600       6 all        0.168    0.130      3.31e-2 1.29e-1
-#>  7 IIT         0      800       7 all        0.258    0.157      8.15e-2 2.39e-1
-#>  8 IIT         3        0       8 all        0.000456 0.000550   8.57e-6 2.21e-4
-#>  9 IIT         3      400       9 all        0.102    0.0682     1.65e-2 8.36e-2
-#> 10 IIT         3      600      10 all        0.213    0.0769     9.70e-2 2.14e-1
+#>    group_id drug_A drug_B dose_id stratum_id    mean     sd       `2.5%`   `50%`
+#>    <fct>     <dbl>  <dbl>   <int> <fct>        <dbl>  <dbl>        <dbl>   <dbl>
+#>  1 trial_A     3        0       1 all        0.00464 0.0140 0.0000000473 2.01e-4
+#>  2 trial_A     4.5      0       2 all        0.0164  0.0243 0.0000783    6.50e-3
+#>  3 trial_A     6        0       3 all        0.0786  0.0468 0.0107       7.09e-2
+#>  4 trial_A     8        0       4 all        0.478   0.201  0.125        4.75e-1
+#>  5 IIT         0      400       5 all        0.0649  0.0492 0.00749      5.32e-2
+#>  6 IIT         0      600       6 all        0.136   0.0761 0.0371       1.20e-1
+#>  7 IIT         0      800       7 all        0.229   0.108  0.0812       2.05e-1
+#>  8 IIT         3        0       8 all        0.00569 0.0172 0.0000000247 3.00e-4
+#>  9 IIT         3      400       9 all        0.0924  0.0553 0.0168       8.24e-2
+#> 10 IIT         3      600      10 all        0.206   0.0799 0.0802       1.97e-1
 #> # ℹ 32 more rows
 #> # ℹ 5 more variables: `97.5%` <dbl>, prob_underdose <dbl>, prob_target <dbl>,
 #> #   prob_overdose <dbl>, ewoc_ok <lgl>

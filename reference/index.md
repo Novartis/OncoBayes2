@@ -79,7 +79,7 @@ Global options and references
   [`as_draws_df(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
   [`as_draws_list(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
   [`as_draws_rvars(`*`<blrm_trial>`*`)`](https://opensource.nibr.com/OncoBayes2/reference/draws-OncoBayes2.md)
-  **\[experimental\]** :
+  :
 
   Transform `blrmfit` or `blrm_trial` to `draws` objects
 

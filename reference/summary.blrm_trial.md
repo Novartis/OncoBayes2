@@ -148,12 +148,7 @@ accuracy is sufficient.
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 # construct initial blrm_trial object from built-in example datasets
 combo2_trial_setup <- blrm_trial(
@@ -164,21 +159,11 @@ combo2_trial_setup <- blrm_trial(
 )
 #> No stratum defined - assigning all groups to single stratum "all"
 #> Warning: Simplified prior CAN and WILL change with releases. NOT recommended to use in production. Instantiating a simplified prior - run summary(trial, "blrm_exnex_call") to inspect arguments. 
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
-#> Warning: 12 out of 42 ewoc metrics have not converged (some Rhats are > 1.1).
-#> Be careful when analysing the results! It is recommended to run
-#> more iterations and/or setting stronger priors.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
-#> Warning: 32 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
+#> Warning: There were 9 divergent transitions after warmup. See
+#> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#> to find out why this is a problem and how to eliminate them.
+#> Warning: Examine the pairs() plot to diagnose sampling problems
+#> Warning: 2 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
 #> Be careful when using the imprecise ewoc estimates! It is recommended to run
 #> more iterations and review doses close to critical thresholds.
 #> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
@@ -202,12 +187,7 @@ summary(combo2_trial_setup, "blrm_exnex_call")
 
 # extract ewoc precision accuracy
 ec <- summary(combo2_trial_setup, "ewoc_check")
-#> Warning: 12 out of 42 ewoc metrics have not converged (some Rhats are > 1.1).
-#> Be careful when analysing the results! It is recommended to run
-#> more iterations and/or setting stronger priors.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
-#> Warning: 32 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
+#> Warning: 2 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
 #> Be careful when using the imprecise ewoc estimates! It is recommended to run
 #> more iterations and review doses close to critical thresholds.
 #> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
@@ -216,22 +196,13 @@ ec <- summary(combo2_trial_setup, "ewoc_check")
 # find any ewoc metrics which are within 95% MCMC error of the threshold
 # these are counted as "imprecise" when printing blrm_trial objects
 subset(ec, abs(prob_overdose_stat) < qnorm(0.975))
-#> # A tibble: 32 × 10
-#>    group_id drug_A drug_B dose_id stratum_id prob_overdose_est
-#>    <fct>     <dbl>  <dbl>   <int> <fct>                  <dbl>
-#>  1 trial_A     6        0       3 all                    0.272
-#>  2 trial_A     8        0       4 all                    0.381
-#>  3 IIT         3        0       8 all                    0.133
-#>  4 IIT         3      400       9 all                    0.201
-#>  5 IIT         3      600      10 all                    0.248
-#>  6 IIT         3      800      11 all                    0.311
-#>  7 IIT         4.5      0      12 all                    0.173
-#>  8 IIT         4.5    400      13 all                    0.256
-#>  9 IIT         4.5    600      14 all                    0.310
-#> 10 IIT         4.5    800      15 all                    0.366
-#> # ℹ 22 more rows
-#> # ℹ 4 more variables: prob_overdose_stat <dbl>, prob_overdose_mcse <dbl>,
-#> #   prob_overdose_ess <dbl>, prob_overdose_rhat <dbl>
+#> # A tibble: 2 × 10
+#>   group_id drug_A drug_B dose_id stratum_id prob_overdose_est prob_overdose_stat
+#>   <fct>     <dbl>  <dbl>   <int> <fct>                  <dbl>              <dbl>
+#> 1 IIT           6    400      17 all                    0.327             -0.515
+#> 2 trial_AB      6    400      36 all                    0.323             -1.08 
+#> # ℹ 3 more variables: prob_overdose_mcse <dbl>, prob_overdose_ess <dbl>,
+#> #   prob_overdose_rhat <dbl>
 
 # ensure that the ewoc metric only flags "ok" whenever the MCMC error
 # is with 95% below the threshold

@@ -247,13 +247,17 @@ than those pre-specified ones can be explored in an ongoing trial.
 
 ## References
 
-Babb, J., Rogatko, A., & Zacks, S. (1998). Cancer phase I clinical
-trials: efficient dose escalation with overdose control. *Statistics in
-medicine*, 17(10), 1103-1120.
+Babb J, Rogatko A, Zacks S (1998). “Cancer phase I clinical trials:
+efficient dose escalation with overdose control.” *Statistics in
+Medicine*, **17**(10), 1103–1120.
+[doi:10.1002/(SICI)1097-0258(19980530)17:10\<1103::AID-SIM793\>3.0.CO;2-9](https://doi.org/10.1002/%28SICI%291097-0258%2819980530%2917%3A10%3C1103%3A%3AAID-SIM793%3E3.0.CO%3B2-9)
+.
 
-Neuenschwander, B., Roychoudhury, S., & Schmidli, H. (2016). On the use
-of co-data in clinical trials. *Statistics in Biopharmaceutical
-Research*, 8(3), 345-354.
+Neuenschwander B, Roychoudhury S, Schmidli H (2016). “On the use of
+co-data in clinical trials.” *Statistics in Biopharmaceutical Research*,
+**8**(3), 345–354.
+[doi:10.1080/19466315.2016.1174149](https://doi.org/10.1080/19466315.2016.1174149)
+.
 
 ## See also
 
@@ -265,12 +269,7 @@ Other blrm_trial combo2 example:
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 
 # construct initial blrm_trial object from built-in example datasets
@@ -282,21 +281,11 @@ combo2_trial_setup <- blrm_trial(
 )
 #> No stratum defined - assigning all groups to single stratum "all"
 #> Warning: Simplified prior CAN and WILL change with releases. NOT recommended to use in production. Instantiating a simplified prior - run summary(trial, "blrm_exnex_call") to inspect arguments. 
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
-#> Warning: 14 out of 42 ewoc metrics have not converged (some Rhats are > 1.1).
-#> Be careful when analysing the results! It is recommended to run
-#> more iterations and/or setting stronger priors.
-#> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.
-#> Please call "help('blrm_trial', help_type='summary')" for further documentation.
-#> Warning: 19 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
+#> Warning: There were 2 divergent transitions after warmup. See
+#> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#> to find out why this is a problem and how to eliminate them.
+#> Warning: Examine the pairs() plot to diagnose sampling problems
+#> Warning: 1 out of 42 ewoc metrics are within the 95% MCMC error of the decision boundary.
 #> Be careful when using the imprecise ewoc estimates! It is recommended to run
 #> more iterations and review doses close to critical thresholds.
 #> You may call "summary(trial, summarize='ewoc_check', ...)" for more diagnostic details.

@@ -83,51 +83,37 @@ trials such that results are on the 0-1 scale.
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 example_model("single_agent", silent = TRUE)
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
 
 ## obtain underdosing (0-0.16], target dosing (0.16-0.33] and
 ## overdosing (0.33-1] probabilities
 summary(blrmfit, interval_prob = c(0, 0.16, 0.33, 1))
-#>          mean          sd         2.5%          50%      97.5% [0,0.16]
-#> 1 0.002175423 0.004455258 2.102056e-06 5.600326e-05 0.01109878      1.0
-#> 2 0.008724355 0.016941761 7.153526e-05 7.739391e-04 0.04382645      1.0
-#> 3 0.026667152 0.043294240 1.074384e-03 6.356063e-03 0.11731116      1.0
-#> 4 0.100945832 0.099841064 1.588602e-02 5.984106e-02 0.27934022      0.7
-#> 5 0.500049422 0.257584238 1.649624e-01 4.445401e-01 0.85698480      0.0
+#>         mean         sd         2.5%          50%      97.5% [0,0.16]
+#> 1 0.00701927 0.01829711 3.193827e-08 0.0005916213 0.06277091  0.99875
+#> 2 0.01704235 0.03022618 4.196824e-06 0.0046573410 0.10794041  0.99300
+#> 3 0.04028952 0.04967560 1.325354e-04 0.0217358570 0.17379939  0.96525
+#> 4 0.11463776 0.09407901 3.617333e-03 0.0936283804 0.35028368  0.73875
+#> 5 0.44625514 0.20650595 9.260015e-02 0.4399088991 0.83667070  0.08475
 #>   (0.16,0.33] (0.33,1]
-#> 1         0.0      0.0
-#> 2         0.0      0.0
-#> 3         0.0      0.0
-#> 4         0.3      0.0
-#> 5         0.3      0.7
+#> 1     0.00125  0.00000
+#> 2     0.00675  0.00025
+#> 3     0.03425  0.00050
+#> 4     0.22800  0.03325
+#> 5     0.24600  0.66925
 
 ## obtain predictive distribution for respective cohorts and
 ## calculate probability for no event, 1 event or >1 event
 ## note that this does the calculation for the cohort sizes
 ## as put into the data-set
 summary(blrmfit, interval_prob = c(-1, 0, 1, 10), predictive = TRUE)
-#>         mean         sd 2.5% 50% 97.5%    (-1,0]       (0,1]       (1,10]
-#> 1 0.00652627 0.08135883    0   0     0 0.9935413 0.006391417 6.730507e-05
-#> 2 0.03489742 0.19414638    0   0     1 0.9670534 0.031050985 1.895623e-03
-#> 3 0.13333576 0.40437497    0   0     1 0.8881358 0.092754269 1.910991e-02
-#> 4 0.40378333 0.68606126    0   0     2 0.6942718 0.223424873 8.230338e-02
-#> 5 1.00009884 0.78703834    0   1     2 0.3096653 0.380570644 3.097641e-01
+#>         mean        sd 2.5% 50% 97.5%    (-1,0]      (0,1]      (1,10]
+#> 1 0.02105781 0.1513876    0   0     0 0.9800550 0.01887134 0.001073674
+#> 2 0.06816939 0.2792281    0   0     1 0.9384946 0.05537610 0.006129270
+#> 3 0.20144760 0.4926178    0   0     2 0.8337461 0.13619767 0.030056191
+#> 4 0.45855105 0.7156588    0   0     2 0.6528129 0.25470655 0.092480521
+#> 5 0.89251028 0.7612431    0   1     2 0.3492674 0.40895489 0.241777697
 
 ## to obtain the predictive for a cohort-size of 6 for all patients
 ## in the data-set one would need to use the newdata argument, e.g.
@@ -135,12 +121,12 @@ summary(blrmfit,
   newdata = transform(hist_SA, num_patients = 6),
   interval_prob = c(-1, 0, 1, 10), predictive = TRUE
 )
-#>         mean        sd 2.5% 50% 97.5%    (-1,0]      (0,1]       (1,10]
-#> 1 0.01305254 0.1164477    0   0     0 0.9872816 0.01238904 0.0003293602
-#> 2 0.05234613 0.2442111    0   0     1 0.9523973 0.04312347 0.0044792015
-#> 3 0.16000291 0.4542517    0   0     2 0.8710905 0.10227207 0.0266374558
-#> 4 0.60567499 0.9020405    0   0     3 0.6070046 0.24112848 0.1518668865
-#> 5 3.00029653 1.8142327    0   3     6 0.0889746 0.16092126 0.7501041392
+#>         mean        sd 2.5% 50% 97.5%    (-1,0]      (0,1]      (1,10]
+#> 1 0.04211562 0.2277301    0   0     1 0.9629396 0.03263697 0.004423426
+#> 2 0.10225409 0.3576496    0   0     1 0.9132219 0.07357688 0.013201239
+#> 3 0.24173712 0.5531809    0   0     2 0.8087179 0.15016912 0.041112926
+#> 4 0.68782657 0.9351123    0   0     3 0.5527840 0.27680859 0.170407412
+#> 5 2.67753085 1.6618334    0   3     6 0.1022313 0.17359886 0.724169822
 
 ## Recover user set sampling defaults
 options(.user_mc_options)

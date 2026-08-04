@@ -167,24 +167,10 @@ applied if `p`, `qc` and `lower.tail` are missing.
 ## Examples
 
 ``` r
-## Setting up dummy sampling for fast execution of example
-## Please use 4 chains and 100x more warmup & iter in practice
-.user_mc_options <- options(
-  OncoBayes2.MC.warmup = 10, OncoBayes2.MC.iter = 20, OncoBayes2.MC.chains = 1,
-  OncoBayes2.MC.save_warmup = FALSE
-)
+.user_mc_options <- options()
 
 # fit an example model. See documentation for "combo2" example
 example_model("combo2", silent = TRUE)
-#> Warning: The largest R-hat is NA, indicating chains have not mixed.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#r-hat
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
-#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#tail-ess
 
 # Find dose of drug_A at which EWOC criterium is just fulfilled
 data_trial_ab <- subset(codata_combo2, group_id == "trial_AB")
@@ -195,22 +181,22 @@ drug_A_crit <- critical_quantile(blrmfit,
 )
 data_trial_ab$drug_A <- drug_A_crit
 summary(blrmfit, newdata = data_trial_ab, interval_prob = c(0, 0.16, 0.33, 1))
-#>        mean         sd       2.5%       50%     97.5% [0,0.16] (0.16,0.33]
-#> 1 0.2784784 0.10046646 0.15311191 0.2942422 0.4260879      0.1         0.6
-#> 2 0.2575160 0.10161998 0.09526054 0.2553971 0.3886394      0.1         0.6
-#> 3 0.2784784 0.10046646 0.15311191 0.2942422 0.4260879      0.1         0.6
-#> 4 0.2784784 0.10046646 0.15311191 0.2942422 0.4260879      0.1         0.6
-#> 5 0.2575160 0.10161998 0.09526054 0.2553971 0.3886394      0.1         0.6
-#> 6 0.2769644 0.08214743 0.18177646 0.2522595 0.4188390      0.0         0.7
-#> 7 0.2784784 0.10046646 0.15311191 0.2942422 0.4260879      0.1         0.6
+#>        mean         sd      2.5%       50%     97.5% [0,0.16] (0.16,0.33]
+#> 1 0.2769221 0.09077882 0.1276817 0.2678987 0.4814455  0.07400     0.67575
+#> 2 0.2795627 0.08284396 0.1346412 0.2737867 0.4641141  0.06000     0.69000
+#> 3 0.2769221 0.09077882 0.1276817 0.2678987 0.4814455  0.07400     0.67575
+#> 4 0.2769221 0.09077882 0.1276817 0.2678987 0.4814455  0.07400     0.67575
+#> 5 0.2795627 0.08284396 0.1346412 0.2737867 0.4641141  0.06000     0.69000
+#> 6 0.2789100 0.07826739 0.1422656 0.2736968 0.4464239  0.04925     0.70075
+#> 7 0.2769221 0.09077882 0.1276817 0.2678987 0.4814455  0.07400     0.67575
 #>   (0.33,1]
-#> 1      0.3
-#> 2      0.3
-#> 3      0.3
-#> 4      0.3
-#> 5      0.3
-#> 6      0.3
-#> 7      0.3
+#> 1  0.25025
+#> 2  0.25000
+#> 3  0.25025
+#> 4  0.25025
+#> 5  0.25000
+#> 6  0.25000
+#> 7  0.25025
 
 ## Recover user set sampling defaults
 options(.user_mc_options)
