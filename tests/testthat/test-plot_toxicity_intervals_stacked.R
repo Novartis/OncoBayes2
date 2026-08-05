@@ -1,15 +1,16 @@
 context("plot stacked tests")
 
-# use gold runs for these tests avoiding sampling uncertainty
-single_agent <- gold_runs$single_agent
-combo2 <- gold_runs$combo2
-trial_examples <- gold_runs$trial_examples
-
-# see helper-load_gold.R and setup-gold.R for example runs: single_agent, combo2, and trial_examples
+plot_trial_fixture_names <- c(
+  single_agent = "single_agent_trial",
+  combo2 = "combo2_trial",
+  combo3 = "combo3_trial"
+)
 
 # plot_toxicity_intervals_stacked.blrmfit ----------------------------------------------
 test_that("plot_toxicity_intervals_stacked.blrmfit works for single-agent example", {
   skip_on_cran()
+
+  single_agent <- load_test_fixture("single_agent_example")
 
   expect_gg(plot_toxicity_intervals_stacked(
     single_agent$blrmfit,
@@ -85,6 +86,8 @@ test_that("plot_toxicity_intervals_stacked.blrmfit works for single-agent exampl
 test_that("plot_toxicity_intervals_stacked.blrmfit works for combo2 example", {
   skip_on_cran()
 
+  combo2 <- load_test_fixture("combo2_example")
+
   a <- plot_toxicity_intervals_stacked(
     combo2$blrmfit,
     x = vars(drug_A),
@@ -124,7 +127,9 @@ test_that("plot_toxicity_intervals_stacked.blrmfit works for combo2 example", {
 test_that("plot_toxicity_intervals_stacked.blrm_trial works for blrm_trial examples", {
   skip_on_cran()
 
-  for (trial in trial_examples) {
+  for (fixture_name in plot_trial_fixture_names) {
+    trial <- load_test_fixture(fixture_name)
+
     a <- plot_toxicity_intervals_stacked(trial)
     expect_gg(a)
 
@@ -167,6 +172,7 @@ test_that("plot_toxicity_curve.blrmfit renders single-agent plots correctly", {
   testthat::skip_if_not_installed("vdiffr", minimum_version = min_vdiffr)
   testthat::skip_if_not(identical(Sys.getenv("TEST_VDIFFR"), "true"))
 
+  single_agent <- load_test_fixture("single_agent_example")
   blrmfit <- single_agent$blrmfit
 
   # basic
@@ -260,6 +266,7 @@ test_that("plot_toxicity_intervals_stacked.blrmfit renders combo2 plots correctl
   testthat::skip_if_not_installed("vdiffr", minimum_version = min_vdiffr)
   testthat::skip_if_not(identical(Sys.getenv("TEST_VDIFFR"), "true"))
 
+  combo2 <- load_test_fixture("combo2_example")
   blrmfit <- combo2$blrmfit
 
   nd <- filter(
@@ -331,7 +338,7 @@ test_that("plot_toxicity_intervals_stacked.blrmfit renders combo2 plots correctl
 })
 
 
-for (ex in names(trial_examples)) {
+for (ex in names(plot_trial_fixture_names)) {
   test_that(
     paste(
       "plot_toxicity_intervals_stacked.blrm_trial renders",
@@ -344,7 +351,7 @@ for (ex in names(trial_examples)) {
       testthat::skip_if_not_installed("vdiffr", minimum_version = min_vdiffr)
       testthat::skip_if_not(identical(Sys.getenv("TEST_VDIFFR"), "true"))
 
-      example <- trial_examples[[ex]]
+      example <- load_test_fixture(plot_trial_fixture_names[[ex]])
 
       # blrm_trial
       p <- plot_toxicity_intervals_stacked(example)
@@ -373,31 +380,7 @@ test_that("plot_toxicity_intervals_stacked() does not have jagged edges", {
   skip_on_cran()
   skip_on_ci()
 
-  dose <- c(5, 10, 20, 40, 60, 80)
-
-  drug_info <- tibble(
-    drug_name = "Dose",
-    dose_ref = 40,
-    dose_unit = "unitless"
-  )
-
-  dose_info <- tibble(group_id = "trial", Dose = dose)
-
-  set.seed(56363)
-  sa_trial <- blrm_trial(
-    data = NULL,
-    drug_info = drug_info,
-    dose_info = dose_info,
-    prior_EX_mu_comp = mixmvnorm(c(1, logit(0.2), 0, diag(c(1, 0.7)^2))),
-    prior_EX_tau_comp = mixmvnorm(c(1, 0, 0, diag(c(1, 1)^2))),
-    prior_EX_prob_comp = matrix(1, nrow = 1, ncol = 1),
-    prior_tau_dist = 0,
-    prior_PD = FALSE,
-    chains = 4,
-    cores = 1,
-    warmup = 1000,
-    iter = 2000
-  )
+  sa_trial <- load_test_fixture("jagged_edges_trial")
 
   sa_trial_intervals <- plot_toxicity_intervals_stacked(
     sa_trial,

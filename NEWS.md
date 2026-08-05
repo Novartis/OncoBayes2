@@ -1,3 +1,9 @@
+# OncoBayes2 0.10-1 - August 5th, 2026
+
+## Enhancements
+
+* Add cached test fixtures to make package testing faster and more convenient.
+
 # OncoBayes2 0.10-0 - August 4th, 2026
 
 ## Enhancements

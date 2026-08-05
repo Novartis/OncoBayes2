@@ -6,10 +6,11 @@ set.seed(12144)
 eps <- 1E-4
 eps_low <- 0.02
 
-## reference runs (TODO: take from gold runs?)
-single_agent <- run_example("single_agent")
-combo2 <- run_example("combo2")
-combo3 <- run_example("combo3")
+## Lazy fixture loaders — called inside test_that() so that a missing
+## fixture only skips the tests that need it, not the entire file.
+load_single_agent <- function() load_test_fixture("single_agent_example")
+load_combo2 <- function() load_test_fixture("combo2_example")
+load_combo3 <- function() load_test_fixture("combo3_example")
 
 suppressPackageStartupMessages(library(rstan))
 suppressPackageStartupMessages(library(dplyr))
@@ -71,20 +72,20 @@ check_model_basic <- function(fit, envir) {
 }
 
 
-test_that(
-  "blrm_exnex data handling consistency single-agent",
+test_that("blrm_exnex data handling consistency single-agent", {
+  single_agent <- load_single_agent()
   check_model_basic(single_agent$blrmfit, single_agent)
-)
+})
 
-test_that(
-  "blrm_exnex data handling consistency combo2",
+test_that("blrm_exnex data handling consistency combo2", {
+  combo2 <- load_combo2()
   check_model_basic(combo2$blrmfit, combo2)
-)
+})
 
-test_that(
-  "blrm_exnex data handling consistency combo3",
+test_that("blrm_exnex data handling consistency combo3", {
+  combo3 <- load_combo3()
   check_model_basic(combo3$blrmfit, combo3)
-)
+})
 
 test_that("blrm_exnex data handling consistency single-agent with cmdstanr backend", {
   skip_if_no_cmdstan()
@@ -145,7 +146,7 @@ test_that("interval probabilites are consistent", {
   skip_on_cran()
   withr::local_seed(67894356)
 
-  combo2_sens <- combo2
+  combo2_sens <- load_combo2()
   sens_low <- hist_combo2 %>%
     mutate(num_toxicities = 0, num_patients = 3 * num_patients)
   combo2_sens$sens_low <- sens_low
@@ -246,9 +247,9 @@ test_that("predictive interval probabilites are correct", {
   ## as we use a semi-analytic scheme to get more accurate posterior
   ## predictive summaries, we test here against a simulation based
   ## approach
-  single_agent_test <- single_agent
+  single_agent_test <- load_single_agent()
   single_agent_test$test_data <- mutate(
-    single_agent$blrmfit$data,
+    single_agent_test$blrmfit$data,
     num_patients = 100,
     num_toxicities = c(0, 0, 0, 25, 50)
   )
@@ -309,6 +310,7 @@ test_that("predictive interval probabilites are correct", {
 ## e.g. from the book chapter
 
 test_that("interval probabilites are not NaN", {
+  combo2 <- load_combo2()
   ss1 <- summary(combo2$blrmfit, interval_prob = c(0.1, 0.4))
   expect_true(all(!is.na(ss1[, 6])))
   ss2 <- summary(
@@ -336,6 +338,7 @@ test_that("correctness of numerical stable log1m_exp_max0", {
 })
 
 test_that("all expected posterior quantiles are returned", {
+  combo2 <- load_combo2()
   prob <- 0.95
   f <- function() {
     summary(combo2$blrmfit, prob = prob)
@@ -375,18 +378,21 @@ query_fit <- function(fit) {
 }
 
 test_that("blrmfit methods work for single agent models", {
+  single_agent <- load_single_agent()
   ## this test is successfull if methods run without errors as we do
   ## not have running examples given they are too costly.
   query_fit(single_agent$blrmfit)
 })
 
 test_that("blrmfit methods work for combo2 models", {
+  combo2 <- load_combo2()
   ## this test is successfull if methods run without errors as we do
   ## not have running examples given they are too costly.
   query_fit(combo2$blrmfit)
 })
 
 test_that("blrmfit methods work for combo3 models", {
+  combo3 <- load_combo3()
   ## this test is successfull if methods run without errors as we do
   ## not have running examples given they are too costly.
   query_fit(combo3$blrmfit)
@@ -699,6 +705,9 @@ test_that("blrm_exnex rejects wrongly nested stratum/group combinations in data 
 test_that("update.blrmfit grows the data set", {
   skip_on_cran()
 
+  single_agent <- load_single_agent()
+  combo2 <- load_combo2()
+
   single_agent_new <- single_agent
   single_agent_new$new_cohort_SA <- data.frame(
     group_id = "trial_A",
@@ -754,7 +763,7 @@ test_that("update.blrmfit grows the data set", {
   expect_true(nrow(summary(new_blrmfit_3)) == nrow(codata_combo2) + 2)
   ## Test that adding dummy data does not change results in the other rows
   set.seed(123144)
-  combo2_new_with_dummy <- combo2
+  combo2_new_with_dummy <- combo2_new
   combo2_new_with_dummy$new_codata <- add_row(
     combo2_new_with_dummy$new_codata,
     group_id = factor("IIT"),
@@ -877,15 +886,12 @@ test_that("update.blrmfit grows the data set", {
     "Assertion on 'grouping and/or stratum columns'.*"
   )
 
-  with(combo2_new, {
-    wrong_codata <- new_codata
-    levels_wrong <- levels(codata_combo2$group_id)
-    levels_wrong[1:2] <- levels_wrong[2:1]
-    wrong_codata <- mutate(
-      wrong_codata,
-      group_id = factor(as.character(group_id), levels = levels_wrong)
-    )
-  })
+  levels_wrong <- levels(codata_combo2$group_id)
+  levels_wrong[1:2] <- levels_wrong[2:1]
+  combo2_new$wrong_codata <- mutate(
+    combo2_new$new_codata,
+    group_id = factor(as.character(group_id), levels = levels_wrong)
+  )
   expect_true(
     sum(
       levels(combo2_new$wrong_codata$group_id) != levels(codata_combo2$group_id)
@@ -902,6 +908,7 @@ test_that("update.blrmfit grows the data set", {
 
 test_that("update.blrmfit does regular updating", {
   skip_on_cran()
+  single_agent <- load_single_agent()
 
   single_agent_new <- single_agent
   single_agent_new$only_cohort_SA <- data.frame(
@@ -922,6 +929,7 @@ test_that("update.blrmfit does regular updating", {
 
 test_that("update.blrmfit combines data and add_data", {
   skip_on_cran()
+  single_agent <- load_single_agent()
 
   single_agent_new <- single_agent
   single_agent_new$only_cohort_SA <- data.frame(
@@ -1535,6 +1543,7 @@ test_that("blrm_exnex properly warns/errors if prior_is_EXNEX is inconsistent fr
 
 
 test_that("blrm_exnex posterior predictons are not randomly shuffled in their order", {
+  single_agent <- load_single_agent()
   ## as some MCMC diagnostics rely on the original order of the MCMC
   ## chain, we test here for the intercept that no permutation is
   ## being done
@@ -1591,18 +1600,18 @@ check_inter_linpred_consistency <- function(example, model_data, logit_pref) {
   })
 }
 
-test_that(
-  "posterior_linpred is consistent at reference dose (single-agent)",
+test_that("posterior_linpred is consistent at reference dose (single-agent)", {
+  single_agent <- load_single_agent()
   check_inter_linpred_consistency(single_agent, hist_SA, 0)
-)
-test_that(
-  "posterior_linpred is consistent at reference dose (combo2)",
+})
+test_that("posterior_linpred is consistent at reference dose (combo2)", {
+  combo2 <- load_combo2()
   check_inter_linpred_consistency(combo2, codata_combo2, logit(0.2))
-)
-test_that(
-  "posterior_linpred is consistent at reference dose (combo3)",
+})
+test_that("posterior_linpred is consistent at reference dose (combo3)", {
+  combo3 <- load_combo3()
   check_inter_linpred_consistency(combo3, hist_combo3, logit(1 / 3))
-)
+})
 
 check_slope_linpred_consistency <- function(example, model_data, logit_pref) {
   example$model_data <- model_data
@@ -1633,18 +1642,18 @@ check_slope_linpred_consistency <- function(example, model_data, logit_pref) {
   })
 }
 
-test_that(
-  "posterior_linpred is consistent at exp(1) times reference dose (single-agent)",
+test_that("posterior_linpred is consistent at exp(1) times reference dose (single-agent)", {
+  single_agent <- load_single_agent()
   check_slope_linpred_consistency(single_agent, hist_SA, 0)
-)
-test_that(
-  "posterior_linpred is consistent at exp(1) times reference dose (combo2)",
+})
+test_that("posterior_linpred is consistent at exp(1) times reference dose (combo2)", {
+  combo2 <- load_combo2()
   check_slope_linpred_consistency(combo2, codata_combo2, logit(0.2))
-)
-test_that(
-  "posterior_linpred is consistent at exp(1) times reference dose (combo3)",
+})
+test_that("posterior_linpred is consistent at exp(1) times reference dose (combo3)", {
+  combo3 <- load_combo3()
   check_slope_linpred_consistency(combo3, hist_combo3, logit(1 / 3))
-)
+})
 
 test_that("no unexpected error of posterior summary when num_groups = 1 or 2 and has_inter = TRUE (deprecated interface)", {
   skip_on_cran()
@@ -3330,6 +3339,7 @@ test_that("blrm_exnex does allow either non-mixture or mixture arguments, but no
 
 test_that("blrm_exnex exits gracefully with an error message when Stan does not sample with rstan", {
   skip_on_cran()
+  single_agent <- load_single_agent()
 
   ## give wrong argument to Stan sampler...should give us a proper error message
   o <- capture.output(
@@ -3348,6 +3358,7 @@ test_that("blrm_exnex exits gracefully with an error message when Stan does not 
 test_that("blrm_exnex exits gracefully with an error message when Stan does not sample with cmdstanr", {
   skip_if_no_cmdstan()
   skip_on_cran()
+  single_agent <- load_single_agent()
 
   ## give wrong argument to Stan sampler...should give us a proper error message
   expect_error(
@@ -3361,6 +3372,7 @@ test_that("blrm_exnex exits gracefully with an error message when Stan does not 
 
 test_that("blrm_exnex accepts mixture priors with differing number of components", {
   skip_on_cran()
+  combo2 <- load_combo2()
 
   withr::local_seed(67894356)
 
@@ -3564,6 +3576,7 @@ test_that("blrm_exnex returns tau posteriors which are zero whenever the hierarc
 
 test_that("blrm_exnex outputs samples of MAP priors when requested", {
   skip_on_cran()
+  combo2 <- load_combo2()
 
   suppressWarnings(
     mapfit <- with(

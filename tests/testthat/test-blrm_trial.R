@@ -1,7 +1,5 @@
 context("blrm_trial tests")
 
-set.seed(123144)
-
 eps <- 1E-4
 
 
@@ -51,13 +49,7 @@ check_print_trial <- function(example) {
   )))
 }
 
-check_print_trial_with_prior <- function(example) {
-  trial <- suppressMessages(suppressWarnings(blrm_trial(
-    example$histdata,
-    example$dose_info,
-    example$drug_info,
-    simplified_prior = TRUE
-  )))
+check_print_trial_with_prior <- function(trial) {
   expect_output(suppressWarnings(print(trial)))
 }
 
@@ -68,7 +60,7 @@ test_that(
 
 test_that(
   "blrm_trial prints with prior",
-  check_print_trial_with_prior(examples$single_agent)
+  check_print_trial_with_prior(load_test_fixture("single_agent_trial"))
 )
 
 
@@ -87,17 +79,8 @@ check_trial_summary <- function(example) {
   })
 }
 
-check_trial_with_prior_summary <- function(example) {
+check_trial_with_prior_summary <- function(example, trial) {
   with(example, {
-    suppressMessages(suppressWarnings(
-      trial <- blrm_trial(
-        histdata,
-        dose_info,
-        drug_info,
-        simplified_prior = TRUE
-      )
-    ))
-
     expect_list(summary(trial, summarize = "dimensionality"))
     expect_tibble(summary(trial, summarize = "data"))
     expect_tibble(summary(trial, summarize = "drug_info"))
@@ -147,6 +130,7 @@ check_trial_with_prior_summary <- function(example) {
       group_id = levels(summary(trial, "dose_info")$group_id[0])[1]
     )
 
+    withr::local_seed(123144)
     newdata[1, summary(trial, "drug_info")$drug_name] <- runif(1)
 
     expect_failure(expect_warning(
@@ -163,7 +147,10 @@ test_that(
 
 test_that(
   "blrm_trial summary with prior",
-  check_trial_with_prior_summary(examples$single_agent)
+  check_trial_with_prior_summary(
+    examples$single_agent,
+    load_test_fixture("single_agent_trial")
+  )
 )
 
 
@@ -765,13 +752,7 @@ test_that(
 
 
 # Test EWOC criterion -----------------------------------------------------
-check_ewoc_criterion_defaults <- function(example) {
-  with(example, {
-    ## create basic blrm trial
-    suppressWarnings(
-      trial <- blrm_trial(histdata, dose_info, drug_info, simplified_prior = T)
-    )
-
+check_ewoc_criterion_defaults <- function(trial) {
     # Test EWOC criterion is computed correctly
     interval_pred <- summary(trial, "data")
 
@@ -807,7 +788,6 @@ check_ewoc_criterion_defaults <- function(example) {
       interval_pred_target
     )
     expect_true(!any(interval_pred_target$ewoc_ok))
-  })
 }
 
 check_ewoc_criterion_intervals <- function(example) {
@@ -916,7 +896,7 @@ check_ewoc_criterion_empty_intervals <- function(example) {
 
 test_that(
   "EWOC defaults for 100% underdosing / target / overdosing probability are sane",
-  check_ewoc_criterion_defaults(examples$single_agent)
+  check_ewoc_criterion_defaults(load_test_fixture("single_agent_trial"))
 )
 
 test_that(

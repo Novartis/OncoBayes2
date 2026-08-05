@@ -1,17 +1,14 @@
 context("critical_quantile tests")
 
-
-set.seed(6578698)
-
 ## tolerance relates to dose mg scale
 eps <- 0.05
-
-single_agent_fit <- gold_runs$single_agent$blrmfit
 
 suppressPackageStartupMessages(library(dplyr))
 
 test_that("critical interval probabilites are consistent for blrmfit objects", {
   skip_on_cran()
+
+  single_agent_fit <- load_test_fixture("single_agent_example")$blrmfit
   
   ## these tests recover the doses in a data-set by first obtaining
   ## the interval probabilities from the summary method and then
@@ -74,6 +71,8 @@ test_that("critical interval probabilites are consistent for blrmfit objects", {
 
 test_that("predictive critical interval probabilites are consistent for blrmfit objects", {
   skip_on_cran()
+
+  single_agent_fit <- load_test_fixture("single_agent_example")$blrmfit
 
   ## these tests recover the doses in a data-set by first obtaining
   ## the interval probabilities from the summary method and then
@@ -144,51 +143,30 @@ test_that("predictive critical interval probabilites are consistent for blrmfit 
 test_that("critical interval probabilites defaults for blrm_trial objects are consistent with standard EWOC", {
   skip_on_cran()
 
-  example <- examples$combo2
+  trial <- load_test_fixture("critical_quantile_combo2_trial")
+  dose_info <- select(trial$dose_info, -dose_id)
+  dc <- critical_quantile(trial)
 
-  with(example, {
-    ## create basic blrm trial
-    dose_info <- mutate(dose_info, drug1 = 1.0 * drug1)
-    suppressWarnings(
-      trial <- blrm_trial(
-        histdata,
-        dose_info,
-        drug_info,
-        simplified_prior = TRUE,
-        interval_prob = c(0, 0.16, 0.33, 1),
-        interval_max_mass = c(under = 1, target = 1, over = 0.25)
-      )
-    )
-    dc <- critical_quantile(trial)
+  sc <- summary(
+    trial,
+    newdata = mutate(dose_info, drug1 = dc),
+    interval_prob = c(0.33, 1)
+  )
+  ref <- rep(0.25, times = nrow(dose_info))
+  test <- pull(sc, "[0.33,1]")
 
-    sc <- summary(
-      trial,
-      newdata = mutate(dose_info, drug1 = dc),
-      interval_prob = c(0.33, 1)
-    )
-    ref <- rep(0.25, times = nrow(dose_info))
-    test <- pull(sc, "[0.33,1]")
+  expect_equal(test, ref, tolerance = 2 * eps)
 
-    expect_equal(test, ref, tolerance = 2 * eps)
-
-    ## trial with non-standard EWOC will trigger an error with defaults
-    suppressWarnings(
-      trial2 <- blrm_trial(
-        histdata,
-        dose_info,
-        drug_info,
-        simplified_prior = TRUE,
-        interval_prob = c(0, 0.16, 0.33, 1),
-        interval_max_mass = c(under = 0.2, target = 1, over = 0.25)
-      )
-    )
-    expect_error(critical_quantile(trial2))
-  })
+  ## trial with non-standard EWOC will trigger an error with defaults
+  trial2 <- load_test_fixture("critical_quantile_combo2_trial_nonstandard_ewoc")
+  expect_error(critical_quantile(trial2))
 })
 
 
 test_that("critical interval probabilites work for fractionals", {
   skip_on_cran()
+
+  single_agent_fit <- load_test_fixture("single_agent_example")$blrmfit
 
   ## note:in .model_distribution the labels for the interval_prob
   ## were wrong in this case leading to no output from the

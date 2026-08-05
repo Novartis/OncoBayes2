@@ -11,11 +11,6 @@ if (!file.exists(recipe)) {
   stop("Fixture recipe does not exist: ", recipe, call. = FALSE)
 }
 
-force <- identical(tolower(Sys.getenv("FIXTURE_FORCE")), "true")
-if (file.exists(output) && !force) {
-  message("Fixture already exists: ", output)
-  quit(status = 0L, save = "no")
-}
 
 devtools::load_all(quiet = TRUE)
 
